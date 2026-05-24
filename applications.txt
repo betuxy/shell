@@ -13,3 +13,4 @@ eza         eza-community/eza
 bat         sharkdp/bat
 fd          sharkdp/fd
 gocryptfs   rfjakob/gocryptfs
+nvim        neovim/neovim
