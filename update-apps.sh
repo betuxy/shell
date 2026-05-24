@@ -1,0 +1,165 @@
+#!/usr/bin/env bash
+#
+# Download/update binaries from GitHub releases.
+# Reads applications.txt for the list of apps.
+#
+# Usage:
+#   ./update-apps.sh             # update all apps
+#   ./update-apps.sh nvim fzf   # update specific apps only
+
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+APPS_FILE="$SCRIPT_DIR/applications.txt"
+INSTALL_DIR="${HOME}/.local/bin"
+TMP_DIR="$(mktemp -d)"
+trap 'rm -rf "$TMP_DIR"' EXIT
+
+# ---------------------------------------------------------------------------
+# Helpers
+# ---------------------------------------------------------------------------
+
+# Ordered list of arch strings to try against release filenames.
+arch_candidates() {
+    case "$(uname -m)" in
+        x86_64)  printf '%s\n' x86_64 amd64 x86-64 ;;
+        aarch64) printf '%s\n' aarch64 arm64 ;;
+        armv7l)  printf '%s\n' armv7 armhf arm ;;
+        *)       printf '%s\n' "$(uname -m)" ;;
+    esac
+}
+
+# Fetch all asset download URLs for the latest release of owner/repo.
+github_assets() {
+    local repo="$1"
+    curl -fsSL \
+        ${GITHUB_TOKEN:+-H "Authorization: Bearer $GITHUB_TOKEN"} \
+        -H "Accept: application/vnd.github.v3+json" \
+        "https://api.github.com/repos/$repo/releases/latest" \
+    | grep -o '"browser_download_url": *"[^"]*"' \
+    | sed 's/.*"browser_download_url": *"//;s/"//'
+}
+
+# Choose the best asset URL for the current OS/arch.
+pick_asset() {
+    local assets="$1"
+    local arch
+
+    while IFS= read -r arch; do
+        local match
+        match="$(printf '%s\n' "$assets" \
+            | grep -i linux \
+            | grep -i "$arch" \
+            | grep -Ev '\.(sha256|sha512|md5|asc|sig|deb|rpm|apk|dmg|exe|msi)$' \
+            | grep -E '\.(tar\.gz|tar\.xz|tar\.bz2|tgz|zip)$' \
+            | head -1)"
+        if [ -n "$match" ]; then
+            printf '%s\n' "$match"
+            return 0
+        fi
+    done < <(arch_candidates)
+
+    # Last resort: AppImage
+    printf '%s\n' "$assets" | grep -i AppImage | head -1 || true
+}
+
+# Download an asset, extract it, and install the named binary.
+install_asset() {
+    local name="$1"
+    local url="$2"
+    local filename
+    filename="$(basename "$url")"
+    local download="$TMP_DIR/$filename"
+    local extract="$TMP_DIR/${name}_extract"
+
+    printf '  downloading %s\n' "$filename"
+    curl -fsSL --progress-bar -o "$download" "$url"
+
+    mkdir -p "$extract"
+
+    case "$filename" in
+        *.tar.gz|*.tgz) tar -xzf "$download" -C "$extract" ;;
+        *.tar.xz)        tar -xJf "$download" -C "$extract" ;;
+        *.tar.bz2)       tar -xjf "$download" -C "$extract" ;;
+        *.zip)           unzip -q  "$download" -d "$extract" ;;
+        *.AppImage)
+            install -m755 "$download" "$INSTALL_DIR/$name"
+            printf '  installed  %s (AppImage)\n' "$name"
+            return 0
+            ;;
+    esac
+
+    # Prefer an executable with the exact binary name; fall back to any executable.
+    local binary
+    binary="$(find "$extract" -type f -name "$name" -perm /111 2>/dev/null | head -1)"
+    if [ -z "$binary" ]; then
+        binary="$(find "$extract" -maxdepth 4 -type f -perm /111 \
+            ! -name '*.so' ! -name '*.so.*' 2>/dev/null | head -1)"
+    fi
+
+    if [ -z "$binary" ]; then
+        printf '  ERROR: no executable found for %s in %s\n' "$name" "$filename" >&2
+        return 1
+    fi
+
+    install -m755 "$binary" "$INSTALL_DIR/$name"
+    printf '  installed  %s → %s/%s\n' "$binary" "$INSTALL_DIR" "$name"
+}
+
+# ---------------------------------------------------------------------------
+# Main
+# ---------------------------------------------------------------------------
+
+mkdir -p "$INSTALL_DIR"
+
+if [ ! -f "$APPS_FILE" ]; then
+    printf 'Error: %s not found\n' "$APPS_FILE" >&2
+    exit 1
+fi
+
+# Build set of names to process (empty = all)
+wanted=("$@")
+
+while IFS= read -r line || [ -n "$line" ]; do
+    # skip blank lines and comments
+    [[ "$line" =~ ^[[:space:]]*(#|$) ]] && continue
+
+    read -r name repo asset_hint <<< "$line"
+    [ -z "${name:-}" ] || [ -z "${repo:-}" ] && continue
+
+    # filter by args if provided
+    if [ "${#wanted[@]}" -gt 0 ]; then
+        skip=1
+        for w in "${wanted[@]}"; do
+            [ "$w" = "$name" ] && skip=0 && break
+        done
+        [ "$skip" -eq 1 ] && continue
+    fi
+
+    printf '\n[%s] %s\n' "$name" "$repo"
+
+    assets="$(github_assets "$repo")" || { printf '  ERROR: GitHub API request failed\n' >&2; continue; }
+
+    if [ -z "$assets" ]; then
+        printf '  ERROR: no assets found\n' >&2
+        continue
+    fi
+
+    if [ -n "${asset_hint:-}" ]; then
+        url="$(printf '%s\n' "$assets" | grep -i "$asset_hint" | head -1)"
+    else
+        url="$(pick_asset "$assets")"
+    fi
+
+    if [ -z "${url:-}" ]; then
+        printf '  ERROR: no matching asset for arch=%s\n' "$(uname -m)" >&2
+        printf '  available assets:\n' >&2
+        printf '%s\n' "$assets" | sed 's/^/    /' >&2
+        continue
+    fi
+
+    install_asset "$name" "$url"
+
+done < "$APPS_FILE"
+
+printf '\nDone.\n'

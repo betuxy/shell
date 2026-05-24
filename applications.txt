@@ -1,0 +1,15 @@
+# Managed binaries — downloaded to ~/.local/bin/ by update-apps.sh
+#
+# Format:  name  owner/repo  [asset-hint]
+# asset-hint: substring matched against the release asset filename (optional)
+# Lines starting with # are ignored.
+
+starship    starship-rs/starship
+sheldon     rossmacarthur/sheldon
+zoxide      ajeetdsouza/zoxide
+atuin       atuinsh/atuin
+fzf         junegunn/fzf
+eza         eza-community/eza
+bat         sharkdp/bat
+fd          sharkdp/fd
+gocryptfs   rfjakob/gocryptfs

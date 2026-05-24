@@ -1,4 +1,31 @@
 # ----------------------------
+# Dotfiles self-check
+# If this .zshrc is a symlink into the dotfiles repo, verify that all other
+# expected symlinks are in place and run setup.sh automatically if any are
+# missing. This makes the setup idempotent across machines and re-runs.
+# ----------------------------
+_df_zshrc="${HOME}/.zshrc"
+if [ -L "$_df_zshrc" ]; then
+    _df_repo="$(dirname "$(dirname "$(readlink "$_df_zshrc")")")"
+    _df_missing=0
+    for _df_link in \
+        "${HOME}/.zsh_aliases" \
+        "${HOME}/.config/starship.toml" \
+        "${HOME}/.config/sheldon/plugins.toml" \
+        "${HOME}/.config/nvim" \
+        "${HOME}/.local/bin/nvim"
+    do
+        [ -L "$_df_link" ] || _df_missing=1
+    done
+    if [ "$_df_missing" -eq 1 ] && [ -f "$_df_repo/setup.sh" ]; then
+        echo "[dotfiles] Missing symlinks detected — running setup.sh..."
+        bash "$_df_repo/setup.sh"
+    fi
+    unset _df_repo _df_missing _df_link
+fi
+unset _df_zshrc
+
+# ----------------------------
 # Variables / environment
 # ----------------------------
 export PATH="${PATH}:${HOME}/bin:${HOME}/.local/bin:/usr/local/bin:${HOME}/.cargo/bin:/${HOME}/go/bin"
