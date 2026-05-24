@@ -12,12 +12,20 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 APPS_FILE="$SCRIPT_DIR/applications.txt"
 INSTALL_DIR="${HOME}/.local/bin"
+CHANGELOG_FILE="$SCRIPT_DIR/CHANGELOG.md"
 TMP_DIR="$(mktemp -d)"
 trap 'rm -rf "$TMP_DIR"' EXIT
 
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
+
+# Append an update entry to CHANGELOG.md.
+write_changelog() {
+    local name="$1" repo="$2" version="$3"
+    printf '%s\t%s\t%s\t%s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$name" "$repo" "$version" \
+        >> "$CHANGELOG_FILE"
+}
 
 # Ordered list of arch strings to try against release filenames.
 arch_candidates() {
@@ -29,15 +37,21 @@ arch_candidates() {
     esac
 }
 
-# Fetch all asset download URLs for the latest release of owner/repo.
-github_assets() {
+# Fetch the latest release for owner/repo.
+# Output: line 1 = tag_name, remaining lines = asset download URLs.
+github_release() {
     local repo="$1"
-    curl -fsSL \
+    local json
+    json="$(curl -fsSL \
         ${GITHUB_TOKEN:+-H "Authorization: Bearer $GITHUB_TOKEN"} \
         -H "Accept: application/vnd.github.v3+json" \
-        "https://api.github.com/repos/$repo/releases/latest" \
-    | grep -o '"browser_download_url": *"[^"]*"' \
-    | sed 's/.*"browser_download_url": *"//;s/"//'
+        "https://api.github.com/repos/$repo/releases/latest")"
+    printf '%s\n' "$json" \
+        | grep -o '"tag_name": *"[^"]*"' \
+        | sed 's/.*"tag_name": *"//;s/"//'
+    printf '%s\n' "$json" \
+        | grep -o '"browser_download_url": *"[^"]*"' \
+        | sed 's/.*"browser_download_url": *"//;s/"//'
 }
 
 # Choose the best asset URL for the current OS/arch.
@@ -138,7 +152,9 @@ while IFS= read -r line || [ -n "$line" ]; do
 
     printf '\n[%s] %s\n' "$name" "$repo"
 
-    assets="$(github_assets "$repo")" || { printf '  ERROR: GitHub API request failed\n' >&2; continue; }
+    release="$(github_release "$repo")" || { printf '  ERROR: GitHub API request failed\n' >&2; continue; }
+    release_tag="$(printf '%s\n' "$release" | head -1)"
+    assets="$(printf '%s\n' "$release" | tail -n +2)"
 
     if [ -z "$assets" ]; then
         printf '  ERROR: no assets found\n' >&2
@@ -158,7 +174,15 @@ while IFS= read -r line || [ -n "$line" ]; do
         continue
     fi
 
+    already_installed=0
+    [ -f "$INSTALL_DIR/$name" ] && already_installed=1
+
     install_asset "$name" "$url"
+
+    if [ "$already_installed" -eq 1 ] && [ -n "$release_tag" ]; then
+        write_changelog "$name" "$repo" "$release_tag"
+        printf '  changelog  → %s\n' "$release_tag"
+    fi
 
 done < "$APPS_FILE"
 

@@ -26,6 +26,32 @@ fi
 unset _df_zshrc
 
 # ----------------------------
+# Applications check
+# Warn if any binary from applications.txt is missing from ~/.local/bin
+# ----------------------------
+_df_zshrc="${HOME}/.zshrc"
+if [ -L "$_df_zshrc" ]; then
+    _df_repo="$(dirname "$(dirname "$(readlink "$_df_zshrc")")")"
+    _df_apps="${_df_repo}/applications.txt"
+    if [ -f "$_df_apps" ]; then
+        _df_missing_apps=()
+        while IFS= read -r _df_line; do
+            [[ "$_df_line" =~ ^[[:space:]]*# ]] && continue
+            [[ -z "${_df_line// }" ]] && continue
+            _df_app="${_df_line%%[[:space:]]*}"
+            [ -f "${HOME}/.local/bin/${_df_app}" ] || _df_missing_apps+=("$_df_app")
+        done < "$_df_apps"
+        if [ "${#_df_missing_apps[@]}" -gt 0 ]; then
+            echo "[dotfiles] Missing apps in ~/.local/bin: ${_df_missing_apps[*]}"
+            echo "[dotfiles] Run update-apps.sh to install them."
+        fi
+        unset _df_missing_apps _df_app _df_line
+    fi
+    unset _df_apps _df_repo
+fi
+unset _df_zshrc
+
+# ----------------------------
 # Variables / environment
 # ----------------------------
 export PATH="${PATH}:${HOME}/bin:${HOME}/.local/bin:/usr/local/bin:${HOME}/.cargo/bin:/${HOME}/go/bin"
