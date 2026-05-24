@@ -4,7 +4,7 @@
 # asset-hint: substring matched against the release asset filename (optional)
 # Lines starting with # are ignored.
 
-starship    starship-rs/starship
+starship    starship/starship
 sheldon     rossmacarthur/sheldon
 zoxide      ajeetdsouza/zoxide
 atuin       atuinsh/atuin
