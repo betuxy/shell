@@ -1,0 +1,77 @@
+alias ls='ls --color=auto'
+alias ll='ls -lah'
+alias gst='git status'
+alias gcm='git commit -m'
+alias ap='ansible-playbook'
+alias ave="ansible-vault encrypt"
+alias avd="ansible-vault decrypt"
+alias gdiff='git diff HEAD^ HEAD'
+alias gic='git clone'
+alias grsh='git reset --soft HEAD^'
+alias gcam="git commit -am"
+alias gl="git pull"
+alias gp="git push"
+alias gst="git status"
+alias gba="git branch -a"
+alias glpg="git log --pretty='%h - %cn, %cr :\ %s' --graph"
+alias gcamp="gcam ${1} && git push"
+alias gaa="git add ."
+alias ga="git add"
+alias gd="git diff"
+alias gds="git diff --staged"
+alias gc="git commit"
+alias gb="git branch"
+alias elbi="sed -rz -e 's/\n/ /g' -e 's/\s+/ /g' -e 's/\"//g' -e \"s/'//g\""
+
+if command -v podman &>/dev/null; then alias docker="podman" fi
+if command -v fdfind &> /dev/null; then alias myfd='fdfind -HIia'; fi
+if command -v z &> /dev/null; then alias cd="z" # https://github.com/ajeetdsouza/zoxide fi
+
+# KUBERNETES
+if command -v kubectl &> /dev/null; then
+    alias k='kubectl'
+    alias kdiff='kubectl diff -f'
+    alias kapply='kubectl apply -f'
+    alias kname='kubectl config current-context'
+fi
+
+if command -v eza &> /dev/null; then
+    alias ls="eza" # https://github.com/eza-community/eza
+    alias ll="eza -lahgu"
+    alias l="eza -lahgu"
+fi
+
+if command -v batcat &> /dev/null || command -v bat &> /dev/null; then
+    alias bat='batcat -f --style="changes,numbers,rule"' # https://github.com/sharkdp/bat
+    alias ocat='batcat --style="plain" -f -P'
+fi
+
+if command -v pwgen &> /dev/null; then
+    function genpasswd () {
+        pw=$(pwgen -ncsB 25 1)
+        echo $pw
+        echo -n $pw | ansible-vault encrypt_string 2>/dev/null
+    }
+else
+    function genpasswd () {
+        echo "Error: pwgen not found."
+    }
+fi
+
+if command -v ansible-vault &> /dev/null; then
+    function avt () {
+        if head -n 1 ${1} | grep -q '$ANSIBLE_VAULT'; then
+            ansible-vault decrypt ${1}
+        else
+            ansible-vault encrypt ${1}
+        fi
+    }
+else
+    function avt () {
+        echo "Error: ansible-galaxy not found."
+    }
+fi
+
+function mount_encfs() {
+  gocryptfs "${HOME}/.encfs" "${HOME}/encfs"
+}
