@@ -17,6 +17,24 @@ TMP_DIR="$(mktemp -d)"
 trap 'rm -rf "$TMP_DIR"' EXIT
 
 # ---------------------------------------------------------------------------
+# Auth
+# ---------------------------------------------------------------------------
+
+# Resolve a GitHub token: prefer $GITHUB_TOKEN, fall back to gh CLI.
+resolve_github_token() {
+    if [ -n "${GITHUB_TOKEN:-}" ]; then
+        return
+    fi
+    if command -v gh &>/dev/null; then
+        local token
+        token="$(gh auth token 2>/dev/null || true)"
+        [ -n "$token" ] && export GITHUB_TOKEN="$token"
+    fi
+}
+
+resolve_github_token
+
+# ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
 
@@ -102,6 +120,17 @@ install_asset() {
             return 0
             ;;
     esac
+
+    # If the archive has a standard FHS tree (bin/<name>, share/, lib/), merge into ~/.local/.
+    local bin_in_tree
+    bin_in_tree="$(find "$extract" -type f -name "$name" -path "*/bin/$name" -perm /111 2>/dev/null | head -1)"
+    if [ -n "$bin_in_tree" ]; then
+        local tree_root
+        tree_root="$(dirname "$(dirname "$bin_in_tree")")"
+        cp -a "$tree_root/." "$INSTALL_DIR/.."
+        printf '  installed  %s (tree) → %s/../\n' "$name" "$INSTALL_DIR"
+        return 0
+    fi
 
     # Prefer an executable with the exact binary name; fall back to any executable.
     local binary

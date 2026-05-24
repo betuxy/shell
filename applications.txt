@@ -12,5 +12,7 @@ fzf         junegunn/fzf
 eza         eza-community/eza
 bat         sharkdp/bat
 fd          sharkdp/fd
+age         FiloSottile/age
 gocryptfs   rfjakob/gocryptfs
 nvim        neovim/neovim
+zellij      zellij-org/zellij
