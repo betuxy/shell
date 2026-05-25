@@ -3,10 +3,10 @@
 # Manage encrypted secrets using age (https://age-encryption.org).
 #
 # Usage:
-#   ./secrets.sh init          # create the encrypted secrets file
-#   ./secrets.sh edit          # decrypt, open in $EDITOR, re-encrypt
-#   ./secrets.sh load          # print export statements for eval
-#                              # eval "$(./secrets.sh load)"
+#   dots secrets init          # create the encrypted secrets file
+#   dots secrets edit          # decrypt, open in $EDITOR, re-encrypt
+#   dots secrets load          # print export statements for eval
+#                              # eval "$(dots secrets load)"
 
 set -euo pipefail
 
@@ -25,7 +25,7 @@ case "$cmd" in
 
     init)
         require_cmd age
-        [ -f "$SECRETS_FILE" ] && die "secrets file already exists — run './secrets.sh edit' to modify it"
+        [ -f "$SECRETS_FILE" ] && die "secrets file already exists — run 'dots secrets edit' to modify it"
 
         tmp="$(mktemp)"
         trap 'rm -f "$tmp"' EXIT
@@ -43,7 +43,7 @@ EOF
 
     edit)
         require_cmd age
-        [ -f "$SECRETS_FILE" ] || die "no secrets file found — run './secrets.sh init' first"
+        [ -f "$SECRETS_FILE" ] || die "no secrets file found — run 'dots secrets init' first"
 
         tmp="$(mktemp)"
         trap 'rm -f "$tmp"' EXIT
@@ -56,7 +56,7 @@ EOF
 
     load)
         require_cmd age
-        [ -f "$SECRETS_FILE" ] || die "no secrets file found — run './secrets.sh init' first"
+        [ -f "$SECRETS_FILE" ] || die "no secrets file found — run 'dots secrets init' first"
 
         while IFS= read -r line || [ -n "$line" ]; do
             [[ "$line" =~ ^[[:space:]]*(#|$) ]] && continue
