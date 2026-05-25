@@ -13,7 +13,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 APPS_FILE="$SCRIPT_DIR/applications.txt"
 INSTALL_DIR="$SCRIPT_DIR/.local/bin"
-CHANGELOG_FILE="$SCRIPT_DIR/CHANGELOG.md"
+CHANGELOG_JSON_FILE="$SCRIPT_DIR/CHANGELOG.json"
 TMP_DIR="$(mktemp -d)"
 trap 'rm -rf "$TMP_DIR"' EXIT
 
@@ -39,11 +39,11 @@ resolve_github_token
 # Helpers
 # ---------------------------------------------------------------------------
 
-# Append an update entry to CHANGELOG.md.
+# Append an update entry to CHANGELOG.json.
 write_changelog() {
     local name="$1" repo="$2" version="$3"
-    printf '%s\t%s\t%s\t%s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$name" "$repo" "$version" \
-        >> "$CHANGELOG_FILE"
+    printf '{"timestamp":"%s","name":"%s","repo":"%s","version":"%s"}\n' \
+        "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$name" "$repo" "$version" >> "$CHANGELOG_JSON_FILE"
 }
 
 # Ordered list of arch strings to try against release filenames.
