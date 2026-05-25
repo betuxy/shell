@@ -33,3 +33,5 @@
 2026-05-25T00:01:14Z	gocryptfs	rfjakob/gocryptfs	v2.6.1
 2026-05-25T00:17:54Z	zoxide	ajeetdsouza/zoxide	v0.9.9
 2026-05-25T00:18:11Z	zoxide	ajeetdsouza/zoxide	v0.9.9
+2026-05-25T01:31:02Z	nvim	neovim/neovim	v0.12.2
+2026-05-25T01:31:10Z	zoxide	ajeetdsouza/zoxide	v0.9.9

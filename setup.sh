@@ -19,6 +19,7 @@
 # $HOME/.local/bin/<name>           → DOTFILES/.local/bin/<name>
 # $HOME/.local/lib/<name>           → DOTFILES/.local/lib/<name>
 # $HOME/.local/share/<name>         → DOTFILES/.local/share/<name>
+# $HOME/.local/state/<name>         → DOTFILES/.local/state/<name>
 
 set -euo pipefail
 
@@ -55,7 +56,7 @@ symlink "$DOTFILES/.config/sheldon/plugins.toml" "$HOME/.config/sheldon/plugins.
 symlink "$DOTFILES/.config/nvim"                 "$HOME/.config/nvim"
 
 # Binaries and support dirs from .local/
-for subdir in bin lib share; do
+for subdir in bin lib share state; do
     src_dir="$DOTFILES/.local/$subdir"
     [ -d "$src_dir" ] || continue
     for src in "$src_dir"/*; do
