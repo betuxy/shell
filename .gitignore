@@ -1,4 +1,5 @@
 secrets/
 .claude/
 .local/state
-.local/share
+.local/share/nvim/mason/registries/
+.local/share/nvim/snacks/
