@@ -123,6 +123,13 @@ if [ -d "${HOME}/venv/bin" ]; then
 fi
 
 # ----------------------------
+# Secrets
+# ----------------------------
+if command -v dots >/dev/null 2>&1; then
+    eval "$(dots secrets load 2>/dev/null)" || true
+fi
+
+# ----------------------------
 # Tool init
 # ----------------------------
 if command -v zoxide >/dev/null 2>&1; then
