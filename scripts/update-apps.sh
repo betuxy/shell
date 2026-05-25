@@ -10,7 +10,7 @@
 
 set -euo pipefail
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 APPS_FILE="$SCRIPT_DIR/applications.txt"
 INSTALL_DIR="$SCRIPT_DIR/.local/bin"
 CHANGELOG_JSON_FILE="$SCRIPT_DIR/CHANGELOG.json"

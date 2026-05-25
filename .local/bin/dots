@@ -88,7 +88,7 @@ _symlink_row() {
 # setup
 # ---------------------------------------------------------------------------
 cmd_setup() {
-    bash "$DOTS/setup.sh"
+    bash "$DOTS/scripts/setup.sh"
 }
 
 # ---------------------------------------------------------------------------
@@ -98,7 +98,7 @@ cmd_apps() {
     local sub="${1:-list}"; shift || true
     case "$sub" in
         list)    _list_apps ;;
-        update)  bash "$DOTS/update-apps.sh" "$@" ;;
+        update)  bash "$DOTS/scripts/update-apps.sh" "$@" ;;
         add)
             local name="${1:-}" repo="${2:-}"
             [ -z "$name" ] || [ -z "$repo" ] && { printf 'Usage: dots apps add <name> <owner/repo>\n' >&2; exit 1; }
@@ -134,7 +134,7 @@ _list_apps() {
 # secrets
 # ---------------------------------------------------------------------------
 cmd_secrets() {
-    bash "$DOTS/secrets.sh" "${@:-}"
+    bash "$DOTS/scripts/secrets.sh" "${@:-}"
 }
 
 # ---------------------------------------------------------------------------
