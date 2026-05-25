@@ -1,0 +1,72 @@
+[INFO  Mon May 25 02:04:20 2026] ...zy/mason.nvim/lua/mason-core/installer/InstallRunner.lua:40: Executing installer for Package(name=stylua) {
+  debug = false,
+  force = false,
+  strict = false
+}
+[ERROR Mon May 25 02:04:21 2026] ...al/share/nvim/lazy/mason.nvim/lua/mason-core/process.lua:226: Failed to spawn process. cmd="unzip", err="ENOENT: no such file or directory"
+[ERROR Mon May 25 02:04:21 2026] ...zy/mason.nvim/lua/mason-core/installer/InstallRunner.lua:100: Installation failed for Package(name=stylua) error=spawn: unzip failed with exit code - and signal -. Could not find executable "unzip" in PATH.
+
+[INFO  Mon May 25 02:06:32 2026] ...zy/mason.nvim/lua/mason-core/installer/InstallRunner.lua:40: Executing installer for Package(name=stylua) {
+  debug = false,
+  force = false,
+  strict = false
+}
+[ERROR Mon May 25 02:06:33 2026] ...al/share/nvim/lazy/mason.nvim/lua/mason-core/process.lua:226: Failed to spawn process. cmd="unzip", err="ENOENT: no such file or directory"
+[ERROR Mon May 25 02:06:33 2026] ...zy/mason.nvim/lua/mason-core/installer/InstallRunner.lua:100: Installation failed for Package(name=stylua) error=spawn: unzip failed with exit code - and signal -. Could not find executable "unzip" in PATH.
+
+[INFO  Mon May 25 02:07:07 2026] ...zy/mason.nvim/lua/mason-core/installer/InstallRunner.lua:40: Executing installer for Package(name=stylua) {
+  debug = false,
+  force = false,
+  strict = false
+}
+[ERROR Mon May 25 02:07:08 2026] ...al/share/nvim/lazy/mason.nvim/lua/mason-core/process.lua:226: Failed to spawn process. cmd="unzip", err="ENOENT: no such file or directory"
+[ERROR Mon May 25 02:07:08 2026] ...zy/mason.nvim/lua/mason-core/installer/InstallRunner.lua:100: Installation failed for Package(name=stylua) error=spawn: unzip failed with exit code - and signal -. Could not find executable "unzip" in PATH.
+
+[INFO  Mon May 25 02:07:46 2026] ...zy/mason.nvim/lua/mason-core/installer/InstallRunner.lua:40: Executing installer for Package(name=stylua) {
+  debug = false,
+  force = false,
+  strict = false
+}
+[ERROR Mon May 25 02:07:47 2026] ...al/share/nvim/lazy/mason.nvim/lua/mason-core/process.lua:226: Failed to spawn process. cmd="unzip", err="ENOENT: no such file or directory"
+[ERROR Mon May 25 02:07:47 2026] ...zy/mason.nvim/lua/mason-core/installer/InstallRunner.lua:100: Installation failed for Package(name=stylua) error=spawn: unzip failed with exit code - and signal -. Could not find executable "unzip" in PATH.
+
+[INFO  Mon May 25 02:17:58 2026] ...zy/mason.nvim/lua/mason-core/installer/InstallRunner.lua:40: Executing installer for Package(name=stylua) {
+  debug = false,
+  force = false,
+  strict = false
+}
+[ERROR Mon May 25 02:18:00 2026] ...al/share/nvim/lazy/mason.nvim/lua/mason-core/process.lua:226: Failed to spawn process. cmd="unzip", err="ENOENT: no such file or directory"
+[ERROR Mon May 25 02:18:00 2026] ...zy/mason.nvim/lua/mason-core/installer/InstallRunner.lua:100: Installation failed for Package(name=stylua) error=spawn: unzip failed with exit code - and signal -. Could not find executable "unzip" in PATH.
+
+[INFO  Mon May 25 02:19:07 2026] ...zy/mason.nvim/lua/mason-core/installer/InstallRunner.lua:40: Executing installer for Package(name=stylua) {
+  debug = false,
+  force = false,
+  strict = false
+}
+[ERROR Mon May 25 02:19:09 2026] ...al/share/nvim/lazy/mason.nvim/lua/mason-core/process.lua:226: Failed to spawn process. cmd="unzip", err="ENOENT: no such file or directory"
+[ERROR Mon May 25 02:19:09 2026] ...zy/mason.nvim/lua/mason-core/installer/InstallRunner.lua:100: Installation failed for Package(name=stylua) error=spawn: unzip failed with exit code - and signal -. Could not find executable "unzip" in PATH.
+
+[INFO  Mon May 25 02:19:14 2026] ...zy/mason.nvim/lua/mason-core/installer/InstallRunner.lua:40: Executing installer for Package(name=stylua) {
+  debug = false,
+  force = false,
+  strict = false
+}
+[ERROR Mon May 25 02:19:15 2026] ...al/share/nvim/lazy/mason.nvim/lua/mason-core/process.lua:226: Failed to spawn process. cmd="unzip", err="ENOENT: no such file or directory"
+[ERROR Mon May 25 02:19:15 2026] ...zy/mason.nvim/lua/mason-core/installer/InstallRunner.lua:100: Installation failed for Package(name=stylua) error=spawn: unzip failed with exit code - and signal -. Could not find executable "unzip" in PATH.
+
+[INFO  Mon May 25 02:20:23 2026] ...zy/mason.nvim/lua/mason-core/installer/InstallRunner.lua:40: Executing installer for Package(name=stylua) {
+  debug = false,
+  force = false,
+  strict = false
+}
+[ERROR Mon May 25 02:20:27 2026] ...al/share/nvim/lazy/mason.nvim/lua/mason-core/process.lua:226: Failed to spawn process. cmd="unzip", err="ENOENT: no such file or directory"
+[ERROR Mon May 25 02:20:27 2026] ...zy/mason.nvim/lua/mason-core/installer/InstallRunner.lua:100: Installation failed for Package(name=stylua) error=spawn: unzip failed with exit code - and signal -. Could not find executable "unzip" in PATH.
+
+[INFO  Mon May 25 02:20:36 2026] ...zy/mason.nvim/lua/mason-core/installer/InstallRunner.lua:40: Executing installer for Package(name=stylua) {
+  debug = false,
+  force = false,
+  strict = false
+}
+[ERROR Mon May 25 02:20:37 2026] ...al/share/nvim/lazy/mason.nvim/lua/mason-core/process.lua:226: Failed to spawn process. cmd="unzip", err="ENOENT: no such file or directory"
+[ERROR Mon May 25 02:20:37 2026] ...zy/mason.nvim/lua/mason-core/installer/InstallRunner.lua:100: Installation failed for Package(name=stylua) error=spawn: unzip failed with exit code - and signal -. Could not find executable "unzip" in PATH.
+

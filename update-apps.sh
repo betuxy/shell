@@ -50,7 +50,7 @@ write_changelog() {
 arch_candidates() {
     case "$(uname -m)" in
         x86_64)  printf '%s\n' x86_64 amd64 x86-64 ;;
-        aarch64) printf '%s\n' aarch64 arm64 ;;
+        aarch64) printf '%s\n' aarch64 arm64 arm-unknown-linux ;;
         armv7l)  printf '%s\n' armv7 armhf arm ;;
         *)       printf '%s\n' "$(uname -m)" ;;
     esac

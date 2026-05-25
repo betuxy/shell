@@ -23,6 +23,9 @@ alias gc="git commit"
 alias gb="git branch"
 alias elbi="sed -rz -e 's/\n/ /g' -e 's/\s+/ /g' -e 's/\"//g' -e \"s/'//g\""
 
+alias vim="nvim"
+alias tree="eza --long --tree --recurse -gua"
+
 if command -v podman &>/dev/null; then alias docker="podman"; fi
 if command -v fdfind &> /dev/null; then alias myfd='fdfind -HIia'; fi
 if command -v z &> /dev/null; then alias cd="z"; fi # https://github.com/ajeetdsouza/zoxide
