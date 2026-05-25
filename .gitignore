@@ -1,4 +1,4 @@
-secrets/
+secrets.age
 .claude/
 .local/state
 .local/share/nvim/mason/registries/
