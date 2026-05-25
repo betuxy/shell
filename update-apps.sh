@@ -81,6 +81,7 @@ pick_asset() {
         local match
         match="$(printf '%s\n' "$assets" \
             | grep -i linux \
+            | grep -iv android \
             | grep -i "$arch" \
             | grep -Ev '\.(sha256|sha512|md5|asc|sig|deb|rpm|apk|dmg|exe|msi)$' \
             | grep -E '\.(tar\.gz|tar\.xz|tar\.bz2|tgz|zip)$' \

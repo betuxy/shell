@@ -4,15 +4,16 @@
 # asset-hint: substring matched against the release asset filename (optional)
 # Lines starting with # are ignored.
 
-starship    starship/starship
-sheldon     rossmacarthur/sheldon
-zoxide      ajeetdsouza/zoxide
-atuin       atuinsh/atuin
-fzf         junegunn/fzf
-eza         eza-community/eza
-bat         sharkdp/bat
-fd          sharkdp/fd
 age         FiloSottile/age
+atuin       atuinsh/atuin
+bat         sharkdp/bat
+eza         eza-community/eza
+fd          sharkdp/fd
+fzf         junegunn/fzf
 gocryptfs   rfjakob/gocryptfs
 nvim        neovim/neovim
+sheldon     rossmacarthur/sheldon
+starship    starship/starship
+tre         dduan/tre
 zellij      zellij-org/zellij
+zoxide      ajeetdsouza/zoxide

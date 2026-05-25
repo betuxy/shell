@@ -6,8 +6,8 @@
 # File mappings:
 #
 # $HOME
-# ├── .zshrc                        → DOTFILES/.config/.zshrc
-# ├── .zsh_aliases                  → DOTFILES/.config/.zsh_aliases
+# ├── .zshrc                        → DOTFILES/.zshrc
+# ├── .zsh_aliases                  → DOTFILES/.zsh_aliases
 # ├── .config/
 # │   ├── nvim/                     → DOTFILES/.config/nvim/
 # │   ├── sheldon/
@@ -45,8 +45,8 @@ symlink() {
 echo "Dotfiles: $DOTFILES"
 echo
 
-symlink "$DOTFILES/.config/.zshrc"               "$HOME/.zshrc"
-symlink "$DOTFILES/.config/.zsh_aliases"         "$HOME/.zsh_aliases"
+symlink "$DOTFILES/.zshrc"                       "$HOME/.zshrc"
+symlink "$DOTFILES/.zsh_aliases"                 "$HOME/.zsh_aliases"
 symlink "$DOTFILES/.config/starship.toml"        "$HOME/.config/starship.toml"
 symlink "$DOTFILES/.config/sheldon/plugins.toml" "$HOME/.config/sheldon/plugins.toml"
 symlink "$DOTFILES/.config/nvim"                 "$HOME/.config/nvim"
