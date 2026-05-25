@@ -22,7 +22,7 @@ Personal shell environment for Linux — managed with a single CLI, versioned in
 
 ```sh
 git clone <repo> ~/dotfiles
-cd ~/dotfiles
+cd ~/dotfiles/scripts
 ./setup.sh          # symlink everything into ~/
 ```
 
