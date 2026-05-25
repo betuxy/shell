@@ -14,6 +14,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 APPS_FILE="$SCRIPT_DIR/applications.txt"
 INSTALL_DIR="$SCRIPT_DIR/.local/bin"
 CHANGELOG_JSON_FILE="$SCRIPT_DIR/CHANGELOG.json"
+VERSIONS_FILE="$SCRIPT_DIR/.local/state/dots-versions"
 TMP_DIR="$(mktemp -d)"
 trap 'rm -rf "$TMP_DIR"' EXIT
 
@@ -44,6 +45,23 @@ write_changelog() {
     local name="$1" repo="$2" version="$3"
     printf '{"timestamp":"%s","name":"%s","repo":"%s","version":"%s"}\n' \
         "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$name" "$repo" "$version" >> "$CHANGELOG_JSON_FILE"
+}
+
+# Read the stored version for an app (empty string if unknown).
+get_stored_version() {
+    [ -f "$VERSIONS_FILE" ] || { printf ''; return; }
+    grep "^${1}=" "$VERSIONS_FILE" 2>/dev/null | cut -d'=' -f2 || true
+}
+
+# Write or update the stored version for an app.
+set_stored_version() {
+    local name="$1" version="$2"
+    mkdir -p "$(dirname "$VERSIONS_FILE")"
+    if grep -q "^${name}=" "$VERSIONS_FILE" 2>/dev/null; then
+        sed -i "s|^${name}=.*|${name}=${version}|" "$VERSIONS_FILE"
+    else
+        printf '%s=%s\n' "$name" "$version" >> "$VERSIONS_FILE"
+    fi
 }
 
 # Ordered list of arch strings to try against release filenames.
@@ -205,14 +223,22 @@ while IFS= read -r line || [ -n "$line" ]; do
         continue
     fi
 
-    already_installed=0
-    [ -f "$INSTALL_DIR/$name" ] && already_installed=1
+    stored_version="$(get_stored_version "$name")"
+    if [ "$stored_version" = "$release_tag" ] && [ -f "$INSTALL_DIR/$name" ]; then
+        printf '  up-to-date %s\n' "$release_tag"
+        continue
+    fi
 
     install_asset "$name" "$url"
 
-    if [ "$already_installed" -eq 1 ] && [ -n "$release_tag" ]; then
+    if [ -n "$release_tag" ]; then
+        set_stored_version "$name" "$release_tag"
         write_changelog "$name" "$repo" "$release_tag"
-        printf '  changelog  → %s\n' "$release_tag"
+        if [ -n "$stored_version" ]; then
+            printf '  updated    %s → %s\n' "$stored_version" "$release_tag"
+        else
+            printf '  changelog  → %s\n' "$release_tag"
+        fi
     fi
 
 done < "$APPS_FILE"
