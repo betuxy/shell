@@ -55,6 +55,9 @@ symlink "$DOTFILES/.config/starship.toml"        "$HOME/.config/starship.toml"
 symlink "$DOTFILES/.config/sheldon/plugins.toml" "$HOME/.config/sheldon/plugins.toml"
 symlink "$DOTFILES/.config/nvim"                 "$HOME/.config/nvim"
 
+# Zsh completions
+symlink "$DOTFILES/completions/_dots" "$HOME/.local/share/zsh/site-functions/_dots"
+
 # Binaries and support dirs from .local/
 for subdir in bin lib share state; do
     src_dir="$DOTFILES/.local/$subdir"

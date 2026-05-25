@@ -1,0 +1,77 @@
+#compdef dots
+
+_dots_repo() {
+    git -C "$(dirname "$(readlink -f "$(command -v dots)")")" rev-parse --show-toplevel 2>/dev/null
+}
+
+_dots_app_names() {
+    local repo; repo="$(_dots_repo)"
+    [[ -z "$repo" ]] && return
+    local apps
+    apps=(${(f)"$(awk 'NF && !/^#/ {print $1}' "$repo/applications.txt" 2>/dev/null)"})
+    _values 'app' $apps
+}
+
+_dots_config_files() {
+    _values 'config file' \
+        '.zshrc' \
+        '.zsh_aliases' \
+        '.config/nvim/init.lua' \
+        '.config/nvim/lua' \
+        '.config/sheldon/plugins.toml' \
+        '.config/starship.toml'
+}
+
+_dots() {
+    case $CURRENT in
+        2)
+            local cmds=(
+                'status:repository overview'
+                'setup:install / verify symlinks'
+                'apps:manage applications'
+                'secrets:manage encrypted secrets'
+                'config:manage dotfiles configs'
+                'changelog:show update history'
+                'menu:interactive fzf menu'
+                'help:show help'
+            )
+            _describe 'command' cmds
+            ;;
+        3)
+            case $words[2] in
+                apps)
+                    local subcmds=(
+                        'list:list managed apps'
+                        'update:download latest releases'
+                        'add:add a new app'
+                        'remove:remove an app'
+                    )
+                    _describe 'subcommand' subcmds
+                    ;;
+                secrets)
+                    local subcmds=(
+                        'init:create encrypted secrets file'
+                        'edit:decrypt, edit, re-encrypt'
+                        'load:print export statements'
+                    )
+                    _describe 'subcommand' subcmds
+                    ;;
+                config)
+                    local subcmds=(
+                        'list:list config files'
+                        'edit:open in $EDITOR'
+                    )
+                    _describe 'subcommand' subcmds
+                    ;;
+            esac
+            ;;
+        *)
+            case "$words[2] $words[3]" in
+                'apps update'|'apps remove') _dots_app_names ;;
+                'config edit')               _dots_config_files ;;
+            esac
+            ;;
+    esac
+}
+
+_dots "$@"

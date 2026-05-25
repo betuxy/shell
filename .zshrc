@@ -87,6 +87,7 @@ zstyle ':fzf-tab:*' fzf-command fzf
 # ----------------------------
 # Enable completion
 # ----------------------------
+fpath=("$HOME/.local/share/zsh/site-functions" $fpath)
 autoload -Uz compinit
 compinit
 
