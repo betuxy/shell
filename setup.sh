@@ -3,7 +3,7 @@
 # Dotfiles setup — idempotent symlink installer.
 # Run once; safe to re-run to pick up newly added entries.
 #
-# File mappings:
+# Config file mappings:
 #
 # $HOME
 # ├── .zshrc                        → DOTFILES/.zshrc
@@ -13,10 +13,12 @@
 # │   ├── sheldon/
 # │   │   └── plugins.toml          → DOTFILES/.config/sheldon/plugins.toml
 # │   └── starship.toml             → DOTFILES/.config/starship.toml
-# └── .local/
-#     └── bin/
-#         └── nvim                  → DOTFILES/.local/bin/nvim
-# (other binaries in ~/.local/bin/ are managed by update-apps.sh)
+#
+# Binaries (managed by update-apps.sh, symlinked from DOTFILES/.local/):
+#
+# $HOME/.local/bin/<name>           → DOTFILES/.local/bin/<name>
+# $HOME/.local/lib/<name>           → DOTFILES/.local/lib/<name>
+# $HOME/.local/share/<name>         → DOTFILES/.local/share/<name>
 
 set -euo pipefail
 
@@ -45,12 +47,22 @@ symlink() {
 echo "Dotfiles: $DOTFILES"
 echo
 
+# Config files
 symlink "$DOTFILES/.zshrc"                       "$HOME/.zshrc"
 symlink "$DOTFILES/.zsh_aliases"                 "$HOME/.zsh_aliases"
 symlink "$DOTFILES/.config/starship.toml"        "$HOME/.config/starship.toml"
 symlink "$DOTFILES/.config/sheldon/plugins.toml" "$HOME/.config/sheldon/plugins.toml"
 symlink "$DOTFILES/.config/nvim"                 "$HOME/.config/nvim"
-symlink "$DOTFILES/.local/bin/nvim"              "$HOME/.local/bin/nvim"
+
+# Binaries and support dirs from .local/
+for subdir in bin lib share; do
+    src_dir="$DOTFILES/.local/$subdir"
+    [ -d "$src_dir" ] || continue
+    for src in "$src_dir"/*; do
+        [ -e "$src" ] || continue
+        symlink "$src" "$HOME/.local/$subdir/$(basename "$src")"
+    done
+done
 
 echo
 echo "Done."

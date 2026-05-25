@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 #
-# Download/update binaries from GitHub releases.
+# Download/update binaries from GitHub releases into the repo's .local/ tree.
 # Reads applications.txt for the list of apps.
+# Run setup.sh afterwards to symlink them into ~/.local/.
 #
 # Usage:
 #   ./update-apps.sh             # update all apps
@@ -11,7 +12,7 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 APPS_FILE="$SCRIPT_DIR/applications.txt"
-INSTALL_DIR="${HOME}/.local/bin"
+INSTALL_DIR="$SCRIPT_DIR/.local/bin"
 CHANGELOG_FILE="$SCRIPT_DIR/CHANGELOG.md"
 TMP_DIR="$(mktemp -d)"
 trap 'rm -rf "$TMP_DIR"' EXIT
@@ -96,7 +97,7 @@ pick_asset() {
     printf '%s\n' "$assets" | grep -i AppImage | head -1 || true
 }
 
-# Download an asset, extract it, and install the named binary.
+# Download an asset, extract it, and install into the repo's .local/ tree.
 install_asset() {
     local name="$1"
     local url="$2"
@@ -122,18 +123,18 @@ install_asset() {
             ;;
     esac
 
-    # If the archive has a standard FHS tree (bin/<name>, share/, lib/), merge into ~/.local/.
+    # If the archive has a standard FHS tree (bin/<name>, lib/, share/), install the whole tree.
     local bin_in_tree
     bin_in_tree="$(find "$extract" -type f -name "$name" -path "*/bin/$name" -perm /111 2>/dev/null | head -1)"
     if [ -n "$bin_in_tree" ]; then
         local tree_root
         tree_root="$(dirname "$(dirname "$bin_in_tree")")"
-        cp -a "$tree_root/." "$INSTALL_DIR/.."
-        printf '  installed  %s (tree) → %s/../\n' "$name" "$INSTALL_DIR"
+        cp -a "$tree_root/." "$SCRIPT_DIR/.local/"
+        printf '  installed  %s (tree) → .local/\n' "$name"
         return 0
     fi
 
-    # Prefer an executable with the exact binary name; fall back to any executable.
+    # Single binary install.
     local binary
     binary="$(find "$extract" -type f -name "$name" -perm /111 2>/dev/null | head -1)"
     if [ -z "$binary" ]; then
@@ -147,7 +148,7 @@ install_asset() {
     fi
 
     install -m755 "$binary" "$INSTALL_DIR/$name"
-    printf '  installed  %s → %s/%s\n' "$binary" "$INSTALL_DIR" "$name"
+    printf '  installed  %s → .local/bin/%s\n' "$binary" "$name"
 }
 
 # ---------------------------------------------------------------------------
