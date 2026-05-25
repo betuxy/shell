@@ -88,7 +88,32 @@ _symlink_row() {
 # setup
 # ---------------------------------------------------------------------------
 cmd_setup() {
+    hdr "Symlinks"
     bash "$DOTS/scripts/setup.sh"
+
+    hdr "Applications"
+    bash "$DOTS/scripts/update-apps.sh"
+
+    hdr "Secrets"
+    if [ -f "$DOTS/secrets.age" ]; then
+        ok "secrets.age already exists — run: dots secrets edit"
+    else
+        printf '  Set up encrypted secrets store? [y/N] '
+        read -r _reply
+        if [[ "${_reply:-}" =~ ^[Yy]$ ]]; then
+            bash "$DOTS/scripts/secrets.sh" init
+        else
+            warn "skipped — run: dots secrets init"
+        fi
+        unset _reply
+    fi
+
+    hdr "Shell completions"
+    rm -f "$HOME/.zcompdump"
+    ok "completion cache cleared — run: exec zsh"
+
+    printf '\n'
+    ok "Setup complete"
 }
 
 # ---------------------------------------------------------------------------
