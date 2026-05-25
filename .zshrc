@@ -1,3 +1,8 @@
+# p10k instant prompt — must be at the very top before any output
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+    source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
 # ----------------------------
 # Dotfiles self-check
 # If this .zshrc is a symlink into the dotfiles repo, verify that all other
@@ -134,9 +139,6 @@ if command -v atuin >/dev/null 2>&1; then
     eval "$(atuin init zsh --disable-up-arrow)"
 fi
 
-if command -v starship >/dev/null 2>&1; then
-    eval "$(starship init zsh)"
-fi
 
 # ----------------------------
 # Plugin manager
@@ -178,3 +180,6 @@ _ssh_bridge() {
   fi
 }
 _ssh_bridge
+
+# p10k config — run 'p10k configure' to regenerate
+[[ -f "${HOME}/.p10k.zsh" ]] && source "${HOME}/.p10k.zsh"
