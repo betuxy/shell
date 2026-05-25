@@ -224,9 +224,17 @@ while IFS= read -r line || [ -n "$line" ]; do
     fi
 
     stored_version="$(get_stored_version "$name")"
-    if [ "$stored_version" = "$release_tag" ] && [ -f "$INSTALL_DIR/$name" ]; then
-        printf '  up-to-date %s\n' "$release_tag"
-        continue
+
+    if [ -f "$INSTALL_DIR/$name" ]; then
+        if [ -z "$stored_version" ]; then
+            # Binary present but untracked — record latest tag, skip download
+            set_stored_version "$name" "$release_tag"
+            printf '  present    recorded %s\n' "$release_tag"
+            continue
+        elif [ "$stored_version" = "$release_tag" ]; then
+            printf '  up-to-date %s\n' "$release_tag"
+            continue
+        fi
     fi
 
     install_asset "$name" "$url"
