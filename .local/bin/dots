@@ -1,0 +1,390 @@
+#!/usr/bin/env bash
+#
+# dots — dotfiles management CLI
+#
+# Usage:
+#   dots                    interactive menu
+#   dots status             repository overview
+#   dots setup              install/verify symlinks
+#   dots apps [list|update|add|remove]
+#   dots secrets [init|edit|load]
+#   dots config [list|edit]
+#   dots changelog [n]
+
+set -euo pipefail
+
+DOTS="$(git -C "$(dirname "${BASH_SOURCE[0]}")" rev-parse --show-toplevel)"
+
+# ---------------------------------------------------------------------------
+# Colours
+# ---------------------------------------------------------------------------
+if [ -t 1 ]; then
+    RED='\033[0;31m' GREEN='\033[0;32m' YELLOW='\033[1;33m'
+    BLUE='\033[0;34m' BOLD='\033[1m' DIM='\033[2m' RESET='\033[0m'
+else
+    RED='' GREEN='' YELLOW='' BLUE='' BOLD='' DIM='' RESET=''
+fi
+
+ok()   { printf "  ${GREEN}✓${RESET} %s\n" "$*"; }
+warn() { printf "  ${YELLOW}!${RESET} %s\n" "$*"; }
+err()  { printf "  ${RED}✗${RESET} %s\n" "$*"; }
+hdr()  { printf "\n${BOLD}%s${RESET}\n" "$*"; }
+
+# ---------------------------------------------------------------------------
+# status
+# ---------------------------------------------------------------------------
+cmd_status() {
+    printf "${BOLD}Dotfiles${RESET}  %s\n" "$DOTS"
+    printf "Branch    %s\n" "$(git -C "$DOTS" branch --show-current 2>/dev/null || echo '(unknown)')"
+
+    local changes
+    changes=$(git -C "$DOTS" status --short 2>/dev/null)
+    if [ -z "$changes" ]; then
+        printf "Git       ${GREEN}clean${RESET}\n"
+    else
+        printf "Git       ${YELLOW}%d uncommitted change(s)${RESET}\n" "$(wc -l <<<"$changes")"
+        printf '%s\n' "$changes" | sed 's/^/          /'
+    fi
+
+    hdr "Symlinks"
+    _check_symlinks
+
+    hdr "Applications"
+    _list_apps
+
+    hdr "Recent changes"
+    _show_changelog 5
+    echo
+}
+
+_check_symlinks() {
+    local all_ok=1
+
+    _symlink_row "$HOME/.zshrc"                        "$DOTS/.zshrc"
+    _symlink_row "$HOME/.zsh_aliases"                  "$DOTS/.zsh_aliases"
+    _symlink_row "$HOME/.config/starship.toml"         "$DOTS/.config/starship.toml"
+    _symlink_row "$HOME/.config/sheldon/plugins.toml"  "$DOTS/.config/sheldon/plugins.toml"
+    _symlink_row "$HOME/.config/nvim"                  "$DOTS/.config/nvim"
+
+    for src in "$DOTS/.local/bin"/*; do
+        [ -e "$src" ] || continue
+        local name; name="$(basename "$src")"
+        _symlink_row "$HOME/.local/bin/$name" "$src"
+    done
+}
+
+_symlink_row() {
+    local dst="$1" src="$2"
+    if [ -L "$dst" ] && [ "$(readlink "$dst")" = "$src" ]; then
+        ok "$dst"
+    elif [ -e "$dst" ]; then
+        warn "$dst  (exists but is not the expected symlink)"
+    else
+        err "$dst  (missing — run: dots setup)"
+    fi
+}
+
+# ---------------------------------------------------------------------------
+# setup
+# ---------------------------------------------------------------------------
+cmd_setup() {
+    bash "$DOTS/setup.sh"
+}
+
+# ---------------------------------------------------------------------------
+# apps
+# ---------------------------------------------------------------------------
+cmd_apps() {
+    local sub="${1:-list}"; shift || true
+    case "$sub" in
+        list)    _list_apps ;;
+        update)  bash "$DOTS/update-apps.sh" "$@" ;;
+        add)
+            local name="${1:-}" repo="${2:-}"
+            [ -z "$name" ] || [ -z "$repo" ] && { printf 'Usage: dots apps add <name> <owner/repo>\n' >&2; exit 1; }
+            printf '%-12s%s\n' "$name" "$repo" >> "$DOTS/applications.txt"
+            ok "Added $name  ($repo)"
+            ;;
+        remove)
+            local name="${1:-}"
+            [ -z "$name" ] && { printf 'Usage: dots apps remove <name>\n' >&2; exit 1; }
+            sed -i "/^${name}[[:space:]]/d" "$DOTS/applications.txt"
+            ok "Removed $name from applications.txt"
+            ;;
+        *)
+            printf 'Usage: dots apps {list|update [name ...]|add <name> <repo>|remove <name>}\n' >&2
+            exit 1 ;;
+    esac
+}
+
+_list_apps() {
+    while IFS= read -r line || [ -n "$line" ]; do
+        [[ "$line" =~ ^[[:space:]]*(#|$) ]] && continue
+        read -r name repo _ <<< "$line"
+        [ -z "${name:-}" ] && continue
+        if [ -f "$DOTS/.local/bin/$name" ]; then
+            ok "$name  ${DIM}($repo)${RESET}"
+        else
+            err "$name  ${DIM}($repo)${RESET}  not installed"
+        fi
+    done < "$DOTS/applications.txt"
+}
+
+# ---------------------------------------------------------------------------
+# secrets
+# ---------------------------------------------------------------------------
+cmd_secrets() {
+    bash "$DOTS/secrets.sh" "${@:-}"
+}
+
+# ---------------------------------------------------------------------------
+# config
+# ---------------------------------------------------------------------------
+CONFIG_FILES=(
+    ".zshrc"
+    ".zsh_aliases"
+    ".config/nvim/init.lua"
+    ".config/nvim/lua"
+    ".config/sheldon/plugins.toml"
+    ".config/starship.toml"
+)
+
+cmd_config() {
+    local sub="${1:-list}"; shift || true
+    case "$sub" in
+        list)
+            hdr "Config files"
+            for f in "${CONFIG_FILES[@]}"; do
+                local path="$DOTS/$f"
+                if [ -e "$path" ]; then
+                    ok "$f"
+                else
+                    err "$f  (not found)"
+                fi
+            done
+            echo
+            ;;
+        edit)
+            local target="${1:-}"
+            if [ -z "$target" ]; then
+                if command -v fzf &>/dev/null; then
+                    target=$(printf '%s\n' "${CONFIG_FILES[@]}" \
+                        | fzf --prompt='edit> ' --height=40% --reverse --no-info) || return 0
+                else
+                    printf 'Usage: dots config edit <file>\n' >&2
+                    printf 'Available:\n'
+                    printf '  %s\n' "${CONFIG_FILES[@]}"
+                    exit 1
+                fi
+            fi
+            local path="$DOTS/$target"
+            [ -e "$path" ] || { printf 'Not found: %s\n' "$path" >&2; exit 1; }
+            "${EDITOR:-vi}" "$path"
+            ;;
+        *)
+            printf 'Usage: dots config {list|edit [file]}\n' >&2
+            exit 1 ;;
+    esac
+}
+
+# ---------------------------------------------------------------------------
+# changelog
+# ---------------------------------------------------------------------------
+cmd_changelog() {
+    local n="${1:-20}"
+    [ -f "$DOTS/CHANGELOG.json" ] || { printf '(no changelog)\n'; return; }
+    printf "${BOLD}%-22s  %-12s  %s${RESET}\n" "timestamp" "app" "version"
+    printf '%s\n' "$(printf '─%.0s' {1..50})"
+    tail -n "$n" "$DOTS/CHANGELOG.json" | while IFS= read -r line; do
+        local ts name version
+        ts=$(grep -o '"timestamp":"[^"]*"' <<<"$line" | cut -d'"' -f4)
+        name=$(grep -o '"name":"[^"]*"' <<<"$line" | cut -d'"' -f4)
+        version=$(grep -o '"version":"[^"]*"' <<<"$line" | cut -d'"' -f4)
+        printf "%-22s  %-12s  %s\n" "$ts" "$name" "$version"
+    done
+}
+
+_show_changelog() {
+    local n="$1"
+    [ -f "$DOTS/CHANGELOG.json" ] || { printf '  (empty)\n'; return; }
+    tail -n "$n" "$DOTS/CHANGELOG.json" | while IFS= read -r line; do
+        local ts name version
+        ts=$(grep -o '"timestamp":"[^"]*"' <<<"$line" | cut -d'"' -f4)
+        name=$(grep -o '"name":"[^"]*"' <<<"$line" | cut -d'"' -f4)
+        version=$(grep -o '"version":"[^"]*"' <<<"$line" | cut -d'"' -f4)
+        printf "  ${DIM}%s${RESET}  %-12s  %s\n" "$ts" "$name" "$version"
+    done
+}
+
+# ---------------------------------------------------------------------------
+# interactive menu
+# ---------------------------------------------------------------------------
+cmd_menu() {
+    if command -v fzf &>/dev/null; then
+        _menu_fzf
+    else
+        _menu_select
+    fi
+}
+
+_menu_fzf() {
+    local choice
+    choice=$(printf '%s\n' \
+        "status          repository overview" \
+        "setup           install / verify symlinks" \
+        "apps list       list managed applications" \
+        "apps update     update all applications" \
+        "apps add        add an application" \
+        "apps remove     remove an application" \
+        "config list     list config files" \
+        "config edit     open a config file in \$EDITOR" \
+        "secrets init    initialise encrypted secrets" \
+        "secrets edit    edit secrets" \
+        "secrets load    print export statements" \
+        "changelog       full update history" \
+        | fzf --prompt='dots> ' --height=50% --reverse --no-info \
+              --preview-window=hidden) || return 0
+
+    local cmd sub
+    cmd=$(awk '{print $1}' <<<"$choice")
+    sub=$(awk '{print $2}' <<<"$choice")
+
+    case "$cmd" in
+        status)    cmd_status ;;
+        setup)     cmd_setup ;;
+        apps)      _menu_apps "$sub" ;;
+        config)    _menu_config "$sub" ;;
+        secrets)   cmd_secrets "$sub" ;;
+        changelog) cmd_changelog ;;
+    esac
+}
+
+_menu_apps() {
+    local sub="$1"
+    case "$sub" in
+        add)
+            local name repo
+            read -rp "App name:       " name
+            read -rp "GitHub repo:    " repo
+            cmd_apps add "$name" "$repo"
+            ;;
+        remove)
+            local name
+            name=$(awk 'NF && !/^#/ {print $1}' "$DOTS/applications.txt" \
+                | fzf --prompt='remove> ' --height=40% --reverse --no-info) || return 0
+            cmd_apps remove "$name"
+            ;;
+        update)
+            local names
+            names=$(awk 'NF && !/^#/ {print $1}' "$DOTS/applications.txt" \
+                | fzf --prompt='update (TAB=multi, Enter=all)> ' \
+                      --height=50% --reverse --no-info --multi) || true
+            if [ -z "$names" ]; then
+                cmd_apps update
+            else
+                # shellcheck disable=SC2086
+                cmd_apps update $names
+            fi
+            ;;
+        *)
+            cmd_apps "$sub"
+            ;;
+    esac
+}
+
+_menu_config() {
+    local sub="$1"
+    case "$sub" in
+        edit)
+            local file
+            file=$(printf '%s\n' "${CONFIG_FILES[@]}" \
+                | fzf --prompt='edit> ' --height=40% --reverse --no-info) || return 0
+            cmd_config edit "$file"
+            ;;
+        *)
+            cmd_config "$sub"
+            ;;
+    esac
+}
+
+_menu_select() {
+    PS3=$'\ndots> '
+    select opt in \
+        "status" "setup" \
+        "apps list" "apps update" "apps add" "apps remove" \
+        "config list" "config edit" \
+        "secrets init" "secrets edit" "secrets load" \
+        "changelog" "quit"; do
+        case "$opt" in
+            status)       cmd_status ;;
+            setup)        cmd_setup ;;
+            "apps list")  cmd_apps list ;;
+            "apps update") cmd_apps update ;;
+            "apps add")
+                read -rp "App name:    " n; read -rp "GitHub repo: " r
+                cmd_apps add "$n" "$r" ;;
+            "apps remove")
+                read -rp "App name: " n; cmd_apps remove "$n" ;;
+            "config list") cmd_config list ;;
+            "config edit")
+                read -rp "File (relative to repo): " f; cmd_config edit "$f" ;;
+            "secrets init") cmd_secrets init ;;
+            "secrets edit") cmd_secrets edit ;;
+            "secrets load") cmd_secrets load ;;
+            changelog)    cmd_changelog ;;
+            quit)         exit 0 ;;
+        esac
+        break
+    done
+}
+
+# ---------------------------------------------------------------------------
+# help
+# ---------------------------------------------------------------------------
+cmd_help() {
+    cat <<EOF
+${BOLD}dots${RESET} — dotfiles management CLI
+
+${BOLD}USAGE${RESET}
+  dots [command] [args]
+
+${BOLD}COMMANDS${RESET}
+  status                     repository overview
+  setup                      install / verify symlinks
+  apps list                  list managed apps
+  apps update [name ...]     download/update app(s)
+  apps add <name> <repo>     add app to applications.txt
+  apps remove <name>         remove app from applications.txt
+  config list                list config files
+  config edit [file]         open config file in \$EDITOR
+  secrets init               create encrypted secrets file
+  secrets edit               decrypt, edit, re-encrypt
+  secrets load               print export statements (eval \$(dots secrets load))
+  changelog [n]              show last n updates (default 20)
+  menu                       interactive menu (default)
+
+${BOLD}EXAMPLES${RESET}
+  dots                       open interactive menu
+  dots status                show full overview
+  dots apps update nvim      update nvim only
+  eval "\$(dots secrets load)"  load secrets into current shell
+EOF
+}
+
+# ---------------------------------------------------------------------------
+# main
+# ---------------------------------------------------------------------------
+CMD="${1:-menu}"; shift || true
+case "$CMD" in
+    status|overview)  cmd_status ;;
+    setup)            cmd_setup "$@" ;;
+    apps)             cmd_apps "$@" ;;
+    secrets)          cmd_secrets "$@" ;;
+    config)           cmd_config "$@" ;;
+    changelog)        cmd_changelog "$@" ;;
+    menu)             cmd_menu ;;
+    help|-h|--help)   cmd_help ;;
+    *)
+        printf 'Unknown command: %s\nRun: dots help\n' "$CMD" >&2
+        exit 1 ;;
+esac
