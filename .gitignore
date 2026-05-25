@@ -1,3 +1,4 @@
 secrets/
 .claude/
 .local/state
+.local/share
