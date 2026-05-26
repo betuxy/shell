@@ -13,6 +13,5 @@ fzf         junegunn/fzf
 gocryptfs   rfjakob/gocryptfs
 nvim        neovim/neovim
 sheldon     rossmacarthur/sheldon
-starship    starship/starship
 zellij      zellij-org/zellij
 zoxide      ajeetdsouza/zoxide
