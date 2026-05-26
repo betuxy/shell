@@ -59,7 +59,7 @@ symlink "$DOTFILES/.config/nvim"                 "$HOME/.config/nvim"
 symlink "$DOTFILES/completions/_dots" "$HOME/.local/share/zsh/site-functions/_dots"
 
 # Binaries and support dirs from .local/
-for subdir in bin lib share state; do
+for subdir in bin lib share; do
     src_dir="$DOTFILES/.local/$subdir"
     [ -d "$src_dir" ] || continue
     for src in "$src_dir"/*; do

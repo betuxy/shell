@@ -14,7 +14,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 APPS_FILE="$SCRIPT_DIR/applications.txt"
 INSTALL_DIR="$SCRIPT_DIR/.local/bin"
 CHANGELOG_JSON_FILE="$SCRIPT_DIR/CHANGELOG.json"
-VERSIONS_FILE="$SCRIPT_DIR/.local/state/dots-versions"
+VERSIONS_FILE="${XDG_STATE_HOME:-$HOME/.local/state}/dots-versions"
 TMP_DIR="$(mktemp -d)"
 trap 'rm -rf "$TMP_DIR"' EXIT
 
