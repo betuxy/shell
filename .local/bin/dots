@@ -13,7 +13,7 @@
 
 set -euo pipefail
 
-DOTS="$(git -C "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" rev-parse --show-toplevel)"
+DOTS="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/../.." && pwd)"
 
 # ---------------------------------------------------------------------------
 # Colours
