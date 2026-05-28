@@ -145,7 +145,7 @@ fi
 # Must come AFTER compinit
 # ----------------------------
 if command -v sheldon >/dev/null 2>&1; then
-    eval "$(sheldon source 2>/dev/null)"
+    eval "$(sheldon source)"
 fi
 
 # ----------------------------
