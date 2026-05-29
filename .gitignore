@@ -2,5 +2,6 @@ secrets.age
 CHANGELOG.json
 .claude/
 .local/state
+.local/share/nvim/lazy/lazy.nvim
 .local/share/nvim/mason/registries/
 .local/share/nvim/snacks/

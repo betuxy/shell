@@ -94,6 +94,18 @@ cmd_setup() {
     hdr "Symlinks"
     bash "$DOTS/scripts/setup.sh"
 
+    hdr "Neovim"
+    local lazy_repo="$DOTS/.local/share/nvim/lazy/lazy.nvim"
+    if [ -d "$lazy_repo" ]; then
+        ok "lazy.nvim already cloned"
+    else
+        printf '  cloning lazy.nvim...\n'
+        mkdir -p "$(dirname "$lazy_repo")"
+        git clone --filter=blob:none --branch=stable \
+            https://github.com/folke/lazy.nvim.git "$lazy_repo"
+        ok "lazy.nvim cloned"
+    fi
+
     hdr "Secrets"
     if [ -f "$DOTS/secrets.age" ]; then
         ok "secrets.age already exists — run: dots secrets edit"

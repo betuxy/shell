@@ -58,6 +58,11 @@ symlink "$DOTFILES/.config/nvim"                 "$HOME/.config/nvim"
 # Zsh completions
 symlink "$DOTFILES/completions/_dots" "$HOME/.local/share/zsh/site-functions/_dots"
 
+# lazy.nvim bootstrap
+if [ -d "$DOTFILES/.local/share/nvim/lazy/lazy.nvim" ]; then
+    symlink "$DOTFILES/.local/share/nvim/lazy/lazy.nvim" "$HOME/.local/share/nvim/lazy/lazy.nvim"
+fi
+
 # Binaries and support dirs from .local/
 for subdir in bin lib share; do
     src_dir="$DOTFILES/.local/$subdir"
