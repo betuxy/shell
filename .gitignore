@@ -1,4 +1,5 @@
 secrets.age
+CHANGELOG.json
 .claude/
 .local/state
 .local/share/nvim/mason/registries/
