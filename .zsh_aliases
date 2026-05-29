@@ -1,6 +1,5 @@
 alias ls='ls --color=auto'
 alias ll='ls -lah'
-alias gst='git status'
 alias gcm='git commit -m'
 alias ap='ansible-playbook'
 alias ave="ansible-vault encrypt"
@@ -14,7 +13,7 @@ alias gp="git push"
 alias gst="git status"
 alias gba="git branch -a"
 alias glpg="git log --pretty='%h - %cn, %cr :\ %s' --graph"
-alias gcamp="gcam ${1} && git push"
+function gcamp() { gcam "$@" && git push; }
 alias gaa="git add ."
 alias ga="git add"
 alias gd="git diff"
