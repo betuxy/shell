@@ -17,14 +17,13 @@ if [ -L "$_df_zshrc" ]; then
         "${HOME}/.zsh_aliases" \
         "${HOME}/.p10k.zsh" \
         "${HOME}/.config/sheldon/plugins.toml" \
-        "${HOME}/.config/nvim" \
-        "${HOME}/.local/bin/nvim"
+        "${HOME}/.config/nvim"
     do
         [ -L "$_df_link" ] || _df_missing=1
     done
-    if [ "$_df_missing" -eq 1 ] && [ -f "$_df_repo/setup.sh" ]; then
-        echo "[dotfiles] Missing symlinks detected — running setup.sh..."
-        bash "$_df_repo/setup.sh"
+    if [ "$_df_missing" -eq 1 ] && [ -f "$_df_repo/scripts/setup.sh" ]; then
+        echo "[dotfiles] Missing symlinks detected — running dots setup..."
+        bash "$_df_repo/scripts/setup.sh"
     fi
     unset _df_repo _df_missing _df_link
 fi
@@ -48,7 +47,7 @@ if [ -L "$_df_zshrc" ]; then
         done < "$_df_apps"
         if [ "${#_df_missing_apps[@]}" -gt 0 ]; then
             echo "[dotfiles] Missing apps in ~/.local/bin: ${_df_missing_apps[*]}"
-            echo "[dotfiles] Run update-apps.sh to install them."
+            echo "[dotfiles] Run: dots apps update"
         fi
         unset _df_missing_apps _df_app _df_line
     fi
