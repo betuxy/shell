@@ -15,7 +15,7 @@ if [ -L "$_df_zshrc" ]; then
     _df_missing=0
     for _df_link in \
         "${HOME}/.zsh_aliases" \
-        "${HOME}/.config/starship.toml" \
+        "${HOME}/.p10k.zsh" \
         "${HOME}/.config/sheldon/plugins.toml" \
         "${HOME}/.config/nvim" \
         "${HOME}/.local/bin/nvim"
@@ -59,10 +59,9 @@ unset _df_zshrc
 # ----------------------------
 # Variables / environment
 # ----------------------------
-export PATH="${PATH}:${HOME}/bin:${HOME}/.local/bin:/usr/local/bin:${HOME}/.cargo/bin:/${HOME}/go/bin"
+export PATH="${PATH}:${HOME}/bin:${HOME}/.local/bin:/usr/local/bin:${HOME}/.cargo/bin:${HOME}/go/bin"
 export EDITOR="nvim"
 export HISTTIMEFORMAT="%d/%m/%y %T "
-export errno="2> /dev/null"
 export WORDCHARS=''
 
 export GOROOT=/usr/local/go
@@ -131,14 +130,9 @@ fi
 # ----------------------------
 # Tool init
 # ----------------------------
-if command -v zoxide >/dev/null 2>&1; then
-    eval "$(zoxide init zsh)"
-fi
-
 if command -v atuin >/dev/null 2>&1; then
     eval "$(atuin init zsh --disable-up-arrow)"
 fi
-
 
 # ----------------------------
 # Plugin manager
@@ -152,6 +146,11 @@ fi
 # fzf
 # ----------------------------
 [ -f "${HOME}/.fzf.zsh" ] && source "${HOME}/.fzf.zsh"
+
+# zoxide — must be after all plugins that wrap cd
+if command -v zoxide >/dev/null 2>&1; then
+    eval "$(zoxide init zsh)"
+fi
 
 # ----------------------------
 # Aliases / custom completions

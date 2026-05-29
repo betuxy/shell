@@ -8,11 +8,11 @@
 # $HOME
 # ├── .zshrc                        → DOTFILES/.zshrc
 # ├── .zsh_aliases                  → DOTFILES/.zsh_aliases
+# ├── .p10k.zsh                     → DOTFILES/.p10k.zsh
 # ├── .config/
 # │   ├── nvim/                     → DOTFILES/.config/nvim/
-# │   ├── sheldon/
-# │   │   └── plugins.toml          → DOTFILES/.config/sheldon/plugins.toml
-# │   └── starship.toml             → DOTFILES/.config/starship.toml
+# │   └── sheldon/
+# │       └── plugins.toml          → DOTFILES/.config/sheldon/plugins.toml
 #
 # Binaries (managed by update-apps.sh, symlinked from DOTFILES/.local/):
 #

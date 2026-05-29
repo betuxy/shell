@@ -5,10 +5,10 @@ Personal shell environment for Linux — managed with a single CLI, versioned in
 ```
 ~
 ├── .zshrc / .zsh_aliases          shell config
+├── .p10k.zsh                      prompt config
 ├── .config/
 │   ├── nvim/                      LazyVim + LSP
-│   ├── sheldon/plugins.toml       zsh plugin manager
-│   └── starship.toml              prompt
+│   └── sheldon/plugins.toml       zsh plugin manager
 └── .local/
     ├── bin/                       self-contained binaries (no package manager)
     │   ├── dots                   ← this CLI
@@ -57,7 +57,7 @@ Binaries are downloaded directly from GitHub Releases by `update-apps.sh` and st
 | [nvim](https://github.com/neovim/neovim) | editor (LazyVim) |
 | [zellij](https://github.com/zellij-org/zellij) | terminal multiplexer |
 | [atuin](https://github.com/atuinsh/atuin) | shell history |
-| [starship](https://github.com/starship/starship) | prompt |
+| [powerlevel10k](https://github.com/romkatv/powerlevel10k) | prompt (via sheldon) |
 | [sheldon](https://github.com/rossmacarthur/sheldon) | zsh plugin manager |
 | [fzf](https://github.com/junegunn/fzf) | fuzzy finder |
 | [zoxide](https://github.com/ajeetdsouza/zoxide) | smarter `cd` |
