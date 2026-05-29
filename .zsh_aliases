@@ -44,7 +44,7 @@ if command -v eza &> /dev/null; then
     alias l="eza -lahgu"
 fi
 
-if command -v bat &> /dev/null || command -v bat &> /dev/null; then
+if command -v bat &> /dev/null || command -v batcat &> /dev/null; then
     alias bat='bat -f --style="changes,numbers,rule"' # https://github.com/sharkdp/bat
     alias ocat='bat --style="plain" -f -P'
 fi
