@@ -1,0 +1,6 @@
+# Ignore everything
+*
+
+# Un-ignore dots script
+!.gitignore
+!dots
