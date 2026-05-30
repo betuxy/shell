@@ -77,3 +77,7 @@ fi
 function mount_encfs() {
   gocryptfs "${HOME}/.encfs" "${HOME}/encfs"
 }
+
+function nocmt() {
+  grep -Ev '(#|^$)' "${1}"
+}
