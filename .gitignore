@@ -3,3 +3,4 @@ CHANGELOG.json
 .claude/
 .local/state
 .local/share/nvim/
+.config/nvim/lazy-lock.json
