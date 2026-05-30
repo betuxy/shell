@@ -54,6 +54,7 @@ symlink "$DOTFILES/.zsh_aliases"                 "$HOME/.zsh_aliases"
 symlink "$DOTFILES/.p10k.zsh"                    "$HOME/.p10k.zsh"
 symlink "$DOTFILES/.config/sheldon/plugins.toml" "$HOME/.config/sheldon/plugins.toml"
 symlink "$DOTFILES/.config/nvim"                 "$HOME/.config/nvim"
+symlink "$DOTFILES/.ansible.cfg"                 "$HOME/.ansible.cfg"
 
 # Zsh completions
 symlink "$DOTFILES/completions/_dots" "$HOME/.local/share/zsh/site-functions/_dots"

@@ -64,7 +64,8 @@ _check_symlinks() {
   _symlink_row "$HOME/.zsh_aliases" "$DOTS/.zsh_aliases"
   _symlink_row "$HOME/.p10k.zsh" "$DOTS/.p10k.zsh"
   _symlink_row "$HOME/.config/sheldon/plugins.toml" "$DOTS/.config/sheldon/plugins.toml"
-  _symlink_row "$HOME/.config/nvim" "$DOTS/.config/nvim"
+  _symlink_row "$HOME/.config/nvim"   "$DOTS/.config/nvim"
+  _symlink_row "$HOME/.ansible.cfg"   "$DOTS/.ansible.cfg"
 
   for src in "$DOTS/.local/bin"/*; do
     [ -e "$src" ] || continue
