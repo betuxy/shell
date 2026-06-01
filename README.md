@@ -24,7 +24,7 @@ Personal shell environment for Linux — managed with a single CLI, versioned in
 git clone https://github.com/betuxy/shell.git "${HOME}/.dotenv" && \
   git -C "${HOME}/.dotenv" checkout v1.0.3 && \
   ${HOME}/.dotenv/dots setup && \
-  source ${HOME}/.zshrc
+  /usr/bin/zsh
 ```
 
 After that, `dots` is on your `$PATH` via `~/.local/bin/dots`.
