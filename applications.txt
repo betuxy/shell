@@ -10,6 +10,7 @@ bat         sharkdp/bat
 eza         eza-community/eza
 fd          sharkdp/fd
 fzf         junegunn/fzf
+gitleaks    gitleaks/gitleaks
 gocryptfs   rfjakob/gocryptfs
 nvim        neovim/neovim
 sheldon     rossmacarthur/sheldon
