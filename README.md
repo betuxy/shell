@@ -49,6 +49,10 @@ eval "$(dots secrets load)"
 dots changelog           formatted update history
 ```
 
+## Homebrew
+
+`dots setup` will prompt to install [Homebrew](https://brew.sh) if it isn't already present. Skip the prompt to keep the environment fully self-contained.
+
 ## Apps
 
 Binaries are downloaded directly from GitHub Releases by `update-apps.sh` and stored in `.local/bin/`. No package manager required — the whole environment is self-contained.
@@ -67,6 +71,7 @@ Binaries are downloaded directly from GitHub Releases by `update-apps.sh` and st
 | [fd](https://github.com/sharkdp/fd) | fast `find` |
 | [age](https://github.com/FiloSottile/age) | file encryption (used by secrets) |
 | [gocryptfs](https://github.com/rfjakob/gocryptfs) | encrypted filesystem |
+| [gitleaks](https://github.com/gitleaks/gitleaks) | secrets scanner |
 
 ## Secrets
 
