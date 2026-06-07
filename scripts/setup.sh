@@ -76,3 +76,12 @@ done
 
 echo
 echo "Done."
+
+# Homebrew
+if ! command -v brew >/dev/null 2>&1; then
+    printf 'Install Homebrew? [y/N] '
+    read -r reply
+    if [[ "$reply" =~ ^[Yy]$ ]]; then
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    fi
+fi
