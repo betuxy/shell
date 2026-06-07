@@ -65,6 +65,7 @@ export WORDCHARS=''
 
 export GOROOT=/usr/local/go
 export GOPATH=$HOME/go
+export HOMEBREW_NO_ENV_HINTS=1
 
 # ----------------------------
 # History settings
@@ -181,3 +182,5 @@ _ssh_bridge
 
 # p10k config — run 'p10k configure' to regenerate
 [[ -f "${HOME}/.p10k.zsh" ]] && source "${HOME}/.p10k.zsh"
+
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv zsh)"
