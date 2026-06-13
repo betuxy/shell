@@ -90,6 +90,13 @@ _symlink_row() {
 # setup
 # ---------------------------------------------------------------------------
 cmd_setup() {
+  local noninteractive=0
+  for arg in "$@"; do
+    case "$arg" in
+      --non-interactive|-y) noninteractive=1 ;;
+    esac
+  done
+
   hdr "Applications"
   bash "$DOTS/scripts/update-apps.sh"
 
@@ -111,6 +118,8 @@ cmd_setup() {
   hdr "Secrets"
   if [ -f "$DOTS/secrets.age" ]; then
     ok "secrets.age already exists — run: dots secrets edit"
+  elif [ "$noninteractive" -eq 1 ]; then
+    warn "skipped — run: dots secrets init"
   else
     printf '  Set up encrypted secrets store? [y/N] '
     read -r _reply
@@ -414,7 +423,7 @@ ${BOLD}USAGE${RESET}
 
 ${BOLD}COMMANDS${RESET}
   status                     repository overview
-  setup                      install / verify symlinks
+  setup [-y|--non-interactive]  install / verify symlinks
   apps list                  list managed apps
   apps update [name ...]     download/update app(s)
   apps add <name> <repo>     add app to applications.txt
