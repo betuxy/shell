@@ -17,6 +17,7 @@ function gcamp() { gcam "$@" && git push; }
 alias gaa="git add ."
 alias ga="git add"
 alias gd="git diff"
+alias gt="git tag -a ${1} -m '${1}'"
 alias gds="git diff --staged"
 alias gc="git commit"
 alias gb="git branch"
@@ -25,7 +26,7 @@ alias elbi="sed -rz -e 's/\n/ /g' -e 's/\s+/ /g' -e 's/\"//g' -e \"s/'//g\""
 alias vim="nvim"
 alias tree="eza --long --tree --recurse -gua"
 
-if command -v podman &>/dev/null; then alias docker="podman"; fi
+if command -v podman &>/dev/null; then alias docker="podman"; alias="pm"; fi
 if command -v fdfind &> /dev/null; then alias myfd='fdfind -HIia'; fi
 if command -v z &> /dev/null; then alias cd="z"; fi # https://github.com/ajeetdsouza/zoxide
 
