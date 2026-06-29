@@ -22,10 +22,16 @@ alias gc="git commit"
 alias gb="git branch"
 alias elbi="sed -rz -e 's/\n/ /g' -e 's/\s+/ /g' -e 's/\"//g' -e \"s/'//g\""
 
+gt() {
+  local tag="$1"
+  [[ "$tag" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "Error: tag must be vX.Y.Z (e.g. v1.2.3)"; return 1; }
+  git tag -a "$tag" -m "$tag" && git push origin "$tag"
+}
+
 alias vim="nvim"
 alias tree="eza --long --tree --recurse -gua"
 
-if command -v podman &>/dev/null; then alias docker="podman"; fi
+if command -v podman &>/dev/null; then alias docker="podman"; alias="pm"; fi
 if command -v fdfind &> /dev/null; then alias myfd='fdfind -HIia'; fi
 if command -v z &> /dev/null; then alias cd="z"; fi # https://github.com/ajeetdsouza/zoxide
 
