@@ -112,13 +112,15 @@ bindkey '^[OB'  down-line-or-beginning-search
 # ----------------------------
 # Word movement
 # ----------------------------
+# INFO:Make sure key binding does not interfere with terminal emulator.
+#
 # Ctrl + Left / Right
-# bindkey '^[[1;5D' backward-word
-# bindkey '^[[1;5C' forward-word
+bindkey '^[[1;5D' backward-word
+bindkey '^[[1;5C' forward-word
 
 # Alt + Left / Right
-bindkey '^[[1;3D' backward-word
-bindkey '^[[1;3C' forward-word
+# bindkey '^[[1;3D' backward-word
+# bindkey '^[[1;3C' forward-word
 
 # ----------------------------
 # Local python3 venv
