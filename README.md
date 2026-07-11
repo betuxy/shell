@@ -23,7 +23,7 @@ Personal shell environment for Linux — managed with a single CLI, versioned in
 
 ```sh
 git clone https://github.com/betuxy/shell.git "${HOME}/.dotenv" && \
-  git -C "${HOME}/.dotenv" checkout v1.0.7 && \
+  git -C "${HOME}/.dotenv" checkout v1.0.8 && \
   ${HOME}/.dotenv/dots setup && \
   /usr/bin/zsh
 ```
