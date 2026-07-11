@@ -167,6 +167,10 @@ if [ -f "${HOME}/.zsh_completions" ]; then
     source "${HOME}/.zsh_completions"
 fi
 
+if [ -f "${HOME}/.zsh_vars" ]; then
+    source "${HOME}/.zsh_vars"
+fi
+
 export SSH_AUTH_SOCK="$HOME/.ssh/agent.sock"
 _ssh_bridge() {
   local pid_file="$HOME/.ssh/agent-bridge.pid"

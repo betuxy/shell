@@ -5,6 +5,7 @@ Personal shell environment for Linux — managed with a single CLI, versioned in
 ```
 ~
 ├── .zshrc / .zsh_aliases          shell config
+├── .zsh_vars                      (optional) vars like keynames etc. 
 ├── .p10k.zsh                      prompt config
 ├── .config/
 │   ├── nvim/                      LazyVim + LSP
@@ -22,7 +23,7 @@ Personal shell environment for Linux — managed with a single CLI, versioned in
 
 ```sh
 git clone https://github.com/betuxy/shell.git "${HOME}/.dotenv" && \
-  git -C "${HOME}/.dotenv" checkout v1.0.6 && \
+  git -C "${HOME}/.dotenv" checkout v1.0.7 && \
   ${HOME}/.dotenv/dots setup && \
   /usr/bin/zsh
 ```

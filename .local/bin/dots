@@ -97,6 +97,11 @@ cmd_setup() {
     esac
   done
 
+  hdr "Create vars file"
+  if ! [[ -f "${HOME}/.zsh_vars" ]]; then
+    echo -e "## ZSH VARIABLES (non-sensitive)\n" > "${HOME}/.zsh_vars"
+  fi
+
   hdr "Applications"
   bash "$DOTS/scripts/update-apps.sh"
 
