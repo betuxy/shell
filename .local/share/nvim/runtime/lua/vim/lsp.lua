@@ -190,7 +190,7 @@ end
 ---
 --- Predicate which decides if a client should be re-used. Used on all running clients. The default
 --- implementation re-uses a client if name and root_dir matches.
---- @field reuse_client? fun(client: vim.lsp.Client, config: vim.lsp.ClientConfig): boolean #
+--- @field reuse_client? fun(client: vim.lsp.Client, config: vim.lsp.ClientConfig, bufnr: integer): boolean #
 ---
 --- [lsp-root_dir()]()
 --- Decides the workspace root: the directory where the LSP server will base its workspaceFolders,
@@ -531,9 +531,20 @@ local function lsp_enable_callback(bufnr)
       lsp.is_enabled(client.name)
       -- Check that the client is managed by vim.lsp.config before deciding to detach it!
       and lsp.config[client.name]
-      and not can_start(bufnr, lsp.config[client.name], false)
     then
-      lsp.buf_detach_client(bufnr, client.id)
+      if can_start(bufnr, lsp.config[client.name], false) then
+        -- When switch between lsp supported filetype (e.g. json to jsonc like #39498),
+        -- client should send `textDocument/didClose` + `textDocument/didOpen` with new language id
+        local new_language_id = client.get_language_id(bufnr, vim.bo[bufnr].filetype)
+        local old_language_id = client.attached_buffers[bufnr] ---@type string?
+        if old_language_id and old_language_id ~= new_language_id then
+          client:_text_document_did_close_handler(bufnr)
+          client.attached_buffers[bufnr] = new_language_id
+          client:_text_document_did_open_handler(bufnr)
+        end
+      else
+        lsp.buf_detach_client(bufnr, client.id)
+      end
     end
   end
 
@@ -671,7 +682,7 @@ end
 --- running clients. The default implementation re-uses a client if it has the
 --- same name and if the given workspace folders (or root_dir) are all included
 --- in the client's workspace folders.
---- @field reuse_client? fun(client: vim.lsp.Client, config: vim.lsp.ClientConfig): boolean
+--- @field reuse_client? fun(client: vim.lsp.Client, config: vim.lsp.ClientConfig, bufnr: integer): boolean
 ---
 --- Buffer handle to attach to if starting or re-using a client (0 for current).
 --- @field bufnr? integer
@@ -750,7 +761,7 @@ function lsp.start(config, opts)
   end
 
   for _, client in pairs(lsp.client._all) do
-    if reuse_client(client, config) then
+    if reuse_client(client, config, bufnr) then
       if opts.attach == false then
         return client.id
       end
@@ -911,7 +922,7 @@ local function buf_attach(bufnr)
           reason = protocol.TextDocumentSaveReason.Manual, ---@type integer
         }
         if client:supports_method('textDocument/willSave') then
-          client:notify('textDocument/willSave', params)
+          client:notify('textDocument/willSave', params, bufnr)
         end
         if client:supports_method('textDocument/willSaveWaitUntil') then
           local result, err =
@@ -950,7 +961,7 @@ local function buf_attach(bufnr)
       for _, client in ipairs(clients) do
         changetracking.reset_buf(client, bufnr)
         if client:supports_method('textDocument/didClose') then
-          client:notify('textDocument/didClose', params)
+          client:notify('textDocument/didClose', params, bufnr)
         end
       end
       for _, client in ipairs(clients) do
@@ -1002,7 +1013,7 @@ function lsp.buf_attach_client(bufnr, client_id)
     return true
   end
 
-  client.attached_buffers[bufnr] = true
+  client.attached_buffers[bufnr] = client.get_language_id(bufnr, vim.bo[bufnr].filetype)
 
   -- This is our first time attaching this client to this buffer.
   -- Send didOpen for the client if it is initialized. If it isn't initialized

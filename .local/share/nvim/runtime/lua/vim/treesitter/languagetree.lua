@@ -1023,7 +1023,9 @@ end)
 ---@return string? # resolved parser name
 local function resolve_lang(alias)
   -- normalize: treesitter language names are always lower case and use underscores
-  alias = alias and alias:lower():gsub('%-', '_')
+  -- Language name (from `get_text_node`) may end with "\n".
+  alias = alias and alias:gsub('%s+', ''):lower():gsub('%-', '_')
+
   -- validate that `alias` is a legal language
   if not (alias and alias:match('[%w_]+') == alias) then
     return
@@ -1231,7 +1233,7 @@ function LanguageTree:_edit(
   end
 end
 
----@param bufnr integer
+---@param buf integer
 ---@param changed_tick integer
 ---@param start_row integer
 ---@param start_col integer
@@ -1243,7 +1245,7 @@ end
 ---@param new_col integer
 ---@param new_byte integer
 function LanguageTree:_on_bytes(
-  bufnr,
+  buf,
   changed_tick,
   start_row,
   start_col,
@@ -1260,7 +1262,7 @@ function LanguageTree:_on_bytes(
 
   self:_log(
     'on_bytes',
-    bufnr,
+    buf,
     changed_tick,
     start_row,
     start_col,
@@ -1288,7 +1290,7 @@ function LanguageTree:_on_bytes(
 
   self:_do_callback(
     'bytes',
-    bufnr,
+    buf,
     changed_tick,
     start_row,
     start_col,

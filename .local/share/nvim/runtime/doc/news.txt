@@ -19,6 +19,8 @@ API
 
 • |nvim_get_commands()| returns `complete` as a Lua function, if it was
   defined as such.
+• |ui-messages| `msg_show.bufwrite` and `msg_show.completion` messages are now
+  `msg_show.progress` events.
 
 DIAGNOSTICS
 
@@ -28,6 +30,8 @@ DIAGNOSTICS
   (deprecated in Nvim 0.10 |deprecated-0.10|).
 • The legacy signature of |vim.diagnostic.enable()| (deprecated in Nvim 0.10
   |deprecated-0.10|) is no longer supported.
+• `vim.diagnostic.Opts.Status.format` no longer accepts the table mapping
+  from severity to text. Use `vim.diagnostic.Opts.Signs.text` instead.
 
 EDITOR
 
@@ -61,6 +65,7 @@ LSP
     • Values < 0 are now treated as `nil` instead of 0.
     • Values outside the range of `signatures[activeSignature].parameters`
       are now treated as `nil` instead of `#signatures[activeSignature].parameters`
+• `client.attached_buffers[buf]` now stores `languageId` string (was boolean).
 
 LUA
 
@@ -157,6 +162,8 @@ DIAGNOSTICS
   enabled or disabled diagnostics.
 • |vim.diagnostic.status()| returns a status description of current buffer
   diagnostics.
+  • It uses the severity names defined by the `signs` field of
+    |vim.diagnostic.config()|, if any.
 • |vim.diagnostic.fromqflist()| accepts `opts.merge_lines` to merge multiline
   compiler messages.
 
@@ -184,6 +191,7 @@ EDITOR
   codeblocks via treesitter and executes them as Lua instead of Vimscript.
   (Or use `:{range}lua` to skip the detection.)
 • |:wall| with |++p| auto-creates missing parent directories.
+• |:restart| now restores the current session while |:restart!| does not.
 • |ZR| restarts Nvim (|:restart|).
 
 EVENTS
@@ -282,6 +290,8 @@ LSP
 • |vim.lsp.buf.rename()| now highlights the symbol being renamed using the
   |hl-LspReferenceTarget| highlight group.
 • Code lenses now display as virtual lines
+• The `reuse_client` predicate now passes the target buffer. See |vim.lsp.Config| and
+  |vim.lsp.start()|
 
 LUA
 
@@ -306,8 +316,9 @@ LUA
 • |vim.filetype.inspect()| returns a copy of the internal tables used for
   filetype detection.
 • Added `__eq` metamethod to |vim.VersionRange|. 2 distinct but representing
-the same range instances now compare equal.
-
+  the same range instances now compare equal.
+• |vim.pos| can now convert between positions and buffer offsets.
+• |vim.ui.input()| now allows setting input scope.
 
 OPTIONS
 
@@ -341,6 +352,7 @@ OPTIONS
   in the cmdline message area.
 • Improved |:set+=|, |:set^=| and |:set-=| handling of comma-separated "key:value"
   pairs (e.g. 'listchars', 'fillchars', 'diffopt').
+• 'ttyfast' can be disabled during startup by setting |$NVIM_NOTTYFAST|.
 
 PERFORMANCE
 
@@ -395,6 +407,9 @@ TREESITTER
 • |:EditQuery| command gained tab-completion, works with injected languages.
 • |LanguageTree:parse()| now accepts a list of ranges.
 • |v_an| |v_in| |v_]n| |v_[n| incremental selection of treesitter nodes.
+• |v_]N| |v_[N| expand selection to sibling treesitter node.
+• |vim.treesitter.select()| starts or adjusts a visual selection at cursor,
+  based on tree nodes.
 
 TUI
 
@@ -440,6 +455,9 @@ VIMSCRIPT
 • |wildtrigger()| triggers command-line expansion.
 • |v:vim_did_init| is set after sourcing |init.vim| but before |load-plugins|.
 • |prompt_appendbuf()| appends text to prompt-buffer.
+• |v:exitreason| is set before |QuitPre|.
+• |v:startreason| differentiates between restart and normal start.
+• |v:starttime| is the process start time (nanoseconds since UNIX epoch).
 
 ==============================================================================
 CHANGED FEATURES                                                 *news-changed*
@@ -471,6 +489,8 @@ These existing features changed their behavior.
   • |nvim_create_autocmd()|
   • |nvim_exec_autocmds()|
   • |nvim_get_autocmds()|
+• |OptionSet| is no longer triggered during startup by automatic
+  |'background'| detection.
 
 ==============================================================================
 REMOVED FEATURES                                                 *news-removed*

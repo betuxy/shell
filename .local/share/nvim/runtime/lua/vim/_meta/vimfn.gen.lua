@@ -122,8 +122,8 @@ function vim.fn.appendbufline(buf, lnum, text) end
 --- If {winid} is not supplied, the argument list of the current
 --- window is used.
 --- If {winid} is -1, the global argument list is used.
---- Otherwise {winid} specifies the window of which the argument
---- list is used: either the window number or the window ID.
+--- Otherwise {winid} (a |window-number| or |window-ID|) specifies
+--- the window of which the argument list is used.
 --- Returns -1 if the {winid} argument is invalid.
 ---
 --- @param winid? integer
@@ -142,10 +142,10 @@ function vim.fn.argidx() end
 --- Returns -1 if the arguments are invalid.
 ---
 --- Without arguments use the current window.
---- With {winnr} only use this window in the current tab page.
+--- With {winnr} only use this window in the current tabpage.
 --- With {winnr} and {tabnr} use the window in the specified tab
 --- page.
---- {winnr} can be the window number or the |window-ID|.
+--- {winnr} is a |window-number| or |window-ID|.
 ---
 --- @param winnr? integer
 --- @param tabnr? integer
@@ -163,7 +163,7 @@ function vim.fn.arglistid(winnr, tabnr) end
 --- <Without the {nr} argument, or when {nr} is -1, a |List| with
 --- the whole |arglist| is returned.
 ---
---- The {winid} argument specifies the window ID, see |argc()|.
+--- The {winid} argument is a |window-ID|, see |argc()|.
 --- For the Vim command line arguments see |v:argv|.
 ---
 --- Returns an empty string if {nr}th argument is not present in
@@ -626,14 +626,14 @@ function vim.fn.bufnr(buf, create) end
 ---
 ---   echo "A window containing buffer 1 is " .. (bufwinid(1))
 --- <
---- Only deals with the current tab page.  See |win_findbuf()| for
+--- Only deals with the current tabpage.  See |win_findbuf()| for
 --- finding more.
 ---
 --- @param buf any
 --- @return integer
 function vim.fn.bufwinid(buf) end
 
---- Like |bufwinid()| but return the window number instead of the
+--- Like |bufwinid()| but returns a |window-number| instead of a
 --- |window-ID|.
 --- If buffer {buf} doesn't exist or there is no such window, -1
 --- is returned.  Example: >vim
@@ -888,14 +888,14 @@ function vim.fn.charidx(string, idx, countcc, utf16) end
 --- changed to the scope of the current directory:
 ---     - If the window local directory (|:lcd|) is set, it
 ---       changes the current working directory for that scope.
----     - Otherwise, if the tab page local directory (|:tcd|) is
+---     - Otherwise, if the tabpage local directory (|:tcd|) is
 ---       set, it changes the current directory for that scope.
 ---     - Otherwise, changes the global directory for that scope.
 ---
 --- If {scope} is present, changes the current working directory
 --- for the specified scope:
 ---     "window"  Changes the window local directory.  |:lcd|
----     "tabpage"  Changes the tab page local directory.  |:tcd|
+---     "tabpage"  Changes the tabpage local directory.  |:tcd|
 ---     "global"  Changes the global directory.  |:cd|
 ---
 --- {dir} must be a String.
@@ -930,8 +930,8 @@ function vim.fn.cindent(lnum) end
 
 --- Clears all matches previously defined for the current window
 --- by |matchadd()| and the |:match| commands.
---- If {win} is specified, use the window with this number or
---- window ID instead of the current window.
+--- If {win} is specified, use this |window-number| or |window-ID|
+--- instead of the current window.
 ---
 --- @param win? integer
 function vim.fn.clearmatches(win) end
@@ -1469,10 +1469,11 @@ function vim.fn.dictwatcheradd(dict, pattern, callback) end
 function vim.fn.dictwatcherdel(dict, pattern, callback) end
 
 --- Returns |TRUE| when autocommands are being executed and the
---- FileType event has been triggered at least once.  Can be used
---- to avoid triggering the FileType event again in the scripts
---- that detect the file type. |FileType|
+--- FileType event triggered at least once for a buffer with
+--- a non-empty 'filetype'.  Can be used to avoid triggering
+--- the FileType event again in the |ftdetect| scripts. |FileType|
 --- Returns |FALSE| when `:setf FALLBACK` was used.
+---
 --- When editing another file, the counter is reset, thus this
 --- really checks if the FileType event has been triggered for the
 --- current buffer.  This allows an autocommand that starts
@@ -3165,10 +3166,10 @@ function vim.fn.getcompletiontype(pat) end
 --- the cursor is returned in "col".  To get the character
 --- position, use |getcursorcharpos()|.
 ---
---- The optional {winid} argument can specify the window.  It can
---- be the window number or the |window-ID|.  The last known
---- cursor position is returned, this may be invalid for the
---- current value of the buffer if it is not the current window.
+--- The optional {winid} (|window-number| or |window-ID|) specifies
+--- the window. The last known cursor position is returned, this
+--- may be invalid for the current value of the buffer if it is not
+--- the current window.
 --- If {winid} is invalid a list with zeroes is returned.
 ---
 --- This can be used to save and restore the cursor position: >vim
@@ -3204,7 +3205,7 @@ function vim.fn.getcursorcharpos(winid) end
 ---   getcwd(0)
 ---   getcwd(0, 0)
 --- <If {winnr} is -1 it is ignored, only the tab is resolved.
---- {winnr} can be the window number or the |window-ID|.
+--- {winnr} is a |window-number| or |window-ID|.
 --- If both {winnr} and {tabnr} are -1 the global working
 --- directory is returned.
 --- Note: When {tabnr} is -1 Vim returns an empty string to
@@ -3310,8 +3311,8 @@ function vim.fn.getftype(fname) end
 --- Returns the |jumplist| for the specified window.
 ---
 --- Without arguments use the current window.
---- With {winnr} only use this window in the current tab page.
---- {winnr} can also be a |window-ID|.
+--- With {winnr} (|window-number| or |window-ID|) only use this
+--- window in the current tabpage.
 --- With {winnr} and {tabnr} use the window in the specified tab
 --- page.   If {winnr} or {tabnr} is invalid, an empty list is
 --- returned.
@@ -3366,12 +3367,12 @@ function vim.fn.getline(lnum, end_) end
 function vim.fn.getline(lnum, end_) end
 
 --- Returns a |List| with all the entries in the location list for
---- window {nr}.  {nr} can be the window number or the |window-ID|.
+--- window {nr} (|window-number| or |window-ID|).
 --- When {nr} is zero the current window is used.
 ---
 --- For a location list window, the displayed location list is
---- returned.  For an invalid window number {nr}, an empty list is
---- returned.  Otherwise, same as |getqflist()|.
+--- returned.  For an invalid {nr}, an empty list is returned.
+--- Otherwise, same as |getqflist()|.
 ---
 --- If the optional {what} dictionary argument is supplied, then
 --- returns the items listed in {what} as a dictionary.  Refer to
@@ -3428,9 +3429,9 @@ function vim.fn.getmarklist(buf) end
 --- |getmatches()| is useful in combination with |setmatches()|,
 --- as |setmatches()| can restore a list of matches saved by
 --- |getmatches()|.
---- If {win} is specified, use the window with this number or
---- window ID instead of the current window.  If {win} is invalid,
---- an empty list is returned.
+--- If {win} is specified, use this |window-number| or |window-ID|
+--- instead of the current window.  If {win} is invalid, an empty
+--- list is returned.
 --- Example: >vim
 ---   echo getmatches()
 --- < >
@@ -3902,22 +3903,22 @@ function vim.fn.getscriptinfo(opts) end
 function vim.fn.getstacktrace() end
 
 --- If {tabnr} is not specified, then information about all the
---- tab pages is returned as a |List|.  Each List item is a
---- |Dictionary|.  Otherwise, {tabnr} specifies the tab page
+--- tabpages is returned as a |List|.  Each List item is a
+--- |Dictionary|.  Otherwise, {tabnr} specifies the tabpage
 --- number and information about that one is returned.  If the tab
 --- page does not exist an empty List is returned.
 ---
 --- Each List item is a |Dictionary| with the following entries:
----   tabnr    tab page number.
+---   tabnr    |tabpage-number|
 ---   variables  a reference to the dictionary with
 ---       tabpage-local variables
----   windows    List of |window-ID|s in the tab page.
+---   windows    List of |window-ID|s in the tabpage.
 ---
 --- @param tabnr? integer
 --- @return any
 function vim.fn.gettabinfo(tabnr) end
 
---- Get the value of a tab-local variable {varname} in tab page
+--- Get the value of a tab-local variable {varname} in tabpage
 --- {tabnr}. |t:var|
 --- Tabs are numbered starting with one.
 --- The {varname} argument is a string.  When {varname} is empty a
@@ -3933,7 +3934,7 @@ function vim.fn.gettabinfo(tabnr) end
 function vim.fn.gettabvar(tabnr, varname, def) end
 
 --- Get the value of window-local variable {varname} in window
---- {winnr} in tab page {tabnr}.
+--- {winnr} in tabpage {tabnr}.
 --- The {varname} argument is a string.  When {varname} is empty a
 --- dictionary with all window-local variables is returned.
 --- When {varname} is equal to "&" get the values of all
@@ -3943,7 +3944,7 @@ function vim.fn.gettabvar(tabnr, varname, def) end
 --- Note that {varname} must be the name without "w:".
 --- Tabs are numbered starting with one.  For the current tabpage
 --- use |getwinvar()|.
---- {winnr} can be the window number or the |window-ID|.
+--- {winnr} is a |window-number| or |window-ID|.
 --- When {winnr} is zero the current window is used.
 --- This also works for a global option, buffer-local option and
 --- window-local option, but it doesn't work for a global variable
@@ -3965,8 +3966,8 @@ function vim.fn.gettabvar(tabnr, varname, def) end
 --- @return any
 function vim.fn.gettabwinvar(tabnr, winnr, varname, def) end
 
---- Returns the tag stack of window {winnr} as a Dict.
---- {winnr} can be the window number or the |window-ID|.
+--- Returns the tag stack of window {winnr} (|window-number| or
+--- |window-ID|) as a Dict.
 --- When {winnr} is not specified, the current window is used.
 --- When window {winnr} doesn't exist, an empty Dict is returned.
 ---
@@ -4017,7 +4018,7 @@ function vim.fn.gettext(text) end
 --- exist the result is an empty list.
 ---
 --- Without {winid} information about all the windows in all the
---- tab pages is returned.
+--- tabpages is returned.
 ---
 --- Each List item is a |Dictionary| with the following entries:
 ---   botline    last complete displayed buffer line
@@ -4028,7 +4029,7 @@ function vim.fn.gettext(text) end
 ---   loclist    1 if showing a location list
 ---   quickfix  1 if quickfix or location list window
 ---   status_height  status lines height (0 or 1)
----   tabnr    tab page number
+---   tabnr    |tabpage-number|
 ---   terminal  1 if a terminal window
 ---   textoff    number of columns occupied by any
 ---       'foldcolumn', 'signcolumn' and line
@@ -4042,7 +4043,7 @@ function vim.fn.gettext(text) end
 ---   wincol    leftmost screen column of the window;
 ---       "col" from |win_screenpos()|
 ---   winid    |window-ID|
----   winnr    window number
+---   winnr    |window-number|
 ---   winrow    topmost screen line of the window;
 ---       "row" from |win_screenpos()|
 ---
@@ -4300,7 +4301,7 @@ function vim.fn.has_key(dict, key) end
 ---   echo haslocaldir(0, 0)
 --- <With {winnr} use that window in the current tabpage.
 --- With {winnr} and {tabnr} use the window in that tabpage.
---- {winnr} can be the window number or the |window-ID|.
+--- {winnr} is a |window-number| or |window-ID|.
 --- If {winnr} is -1 it is ignored, only the tab is resolved.
 --- Throw error if the arguments are invalid. |E5000| |E5001| |E5002|
 ---
@@ -5734,8 +5735,8 @@ function vim.fn.match(expr, pat, start, count) end
 ---   conceal      Special character to show instead of the
 ---         match (only for |hl-Conceal| highlighted
 ---         matches, see |:syn-cchar|)
----   window      Instead of the current window use the
----         window with this number or window ID.
+---   window      Use this |window-number| or |window-ID| instead
+---         of the current window.
 ---
 --- The number of matches is not limited, as it is the case with
 --- the |:match| commands.
@@ -5874,8 +5875,7 @@ function vim.fn.matchbufline(buf, pat, lnum, end_, dict) end
 --- or one of the |:match| commands.  Returns 0 if successful,
 --- otherwise -1.  See example for |matchadd()|.  All matches can
 --- be deleted in one operation by |clearmatches()|.
---- If {win} is specified, use the window with this number or
---- window ID instead of the current window.
+--- {win} (if given) is a |window-number| or |window-ID|.
 ---
 --- @param id integer
 --- @param win? integer
@@ -8299,12 +8299,12 @@ function vim.fn.setfperm(fname, mode) end
 --- @return any
 function vim.fn.setline(lnum, text) end
 
---- Create or replace or add to the location list for window {nr}.
---- {nr} can be the window number or the |window-ID|.
+--- Create or replace or add to the location list for window {nr}
+--- (|window-number| or |window-ID|).
 --- When {nr} is zero the current window is used.
 ---
 --- For a location list window, the displayed location list is
---- modified.  For an invalid window number {nr}, -1 is returned.
+--- modified.  For an invalid {nr}, -1 is returned.
 --- Otherwise, same as |setqflist()|.
 --- Also see |location-list|.
 ---
@@ -8325,8 +8325,7 @@ function vim.fn.setloclist(nr, list, action, what) end
 --- current window.  Returns 0 if successful, otherwise -1.  All
 --- current matches are cleared before the list is restored.  See
 --- example for |getmatches()|.
---- If {win} is specified, use the window with this number or
---- window ID instead of the current window.
+--- {win} (if given) is a |window-number| or |window-ID|.
 ---
 --- @param list vim.fn.getmatches.ret.item[]
 --- @param win? integer
@@ -8574,7 +8573,7 @@ function vim.fn.setqflist(list, action, what) end
 --- @return any
 function vim.fn.setreg(regname, value, options) end
 
---- Set tab-local variable {varname} to {val} in tab page {tabnr}.
+--- Set tab-local variable {varname} to {val} in tabpage {tabnr}.
 --- |t:var|
 --- The {varname} argument is a string.
 --- Note that the variable name without "t:" must be used.
@@ -8591,7 +8590,7 @@ function vim.fn.settabvar(tabnr, varname, val) end
 --- {val}.
 --- Tabs are numbered starting with one.  For the current tabpage
 --- use |setwinvar()|.
---- {winnr} can be the window number or the |window-ID|.
+--- {winnr} is a |window-number| or |window-ID|.
 --- When {winnr} is zero the current window is used.
 --- This also works for a global or local buffer option, but it
 --- doesn't work for a global or local buffer variable.
@@ -8609,8 +8608,8 @@ function vim.fn.settabvar(tabnr, varname, val) end
 --- @return any
 function vim.fn.settabwinvar(tabnr, winnr, varname, val) end
 
---- Modify the tag stack of the window {nr} using {dict}.
---- {nr} can be the window number or the |window-ID|.
+--- Modify the tag stack of the window {nr} (|window-number| or
+--- |window-ID|) using {dict}.
 ---
 --- For a list of supported items in {dict}, refer to
 --- |gettagstack()|.  "curidx" takes effect before changing the tag
@@ -8648,7 +8647,7 @@ function vim.fn.settabwinvar(tabnr, winnr, varname, val) end
 --- @return any
 function vim.fn.settagstack(nr, dict, action) end
 
---- Like |settabwinvar()| for the current tab page.
+--- Like |settabwinvar()| for the current tabpage.
 --- Examples: >vim
 ---   call setwinvar(1, "&list", 0)
 ---   call setwinvar(2, "myvar", "foobar")
@@ -10264,9 +10263,9 @@ function vim.fn.system(cmd, input) end
 function vim.fn.systemlist(cmd, input, keepempty) end
 
 --- Returns a |List| of buffer numbers, one for each window in
---- the specified tab page.
---- {arg} specifies the number of the tab page to be used.  When
---- omitted the current tab page is used.
+--- the specified tabpage.
+--- {arg} specifies the number of the tabpage to be used.  When
+--- omitted the current tabpage is used.
 --- When {arg} is invalid the number zero is returned.
 --- To get a list of all buffers in all tabs use this: >vim
 ---   let buflist = []
@@ -10279,15 +10278,12 @@ function vim.fn.systemlist(cmd, input, keepempty) end
 --- @return any
 function vim.fn.tabpagebuflist(arg) end
 
---- Returns the number of the current tab page.  The first tab
---- page has number 1.
+--- Returns the current |tabpage-number|.
 ---
 --- The optional argument {arg} supports the following values:
----   $  the number of the last tab page (the tab page
----     count).
----   #  the number of the last accessed tab page
----     (where |g<Tab>| goes to).  If there is no
----     previous tab page, 0 is returned.
+---   $  the last |tabpage-number| (the tabpage count).
+---   #  the last-accessed |tabpage-number| (where |g<Tab>|
+---     goes to), or 0 if there is no previous tabpage.
 --- The number can be used with the |:tab| command.
 ---
 --- Returns zero on error.
@@ -10296,16 +10292,16 @@ function vim.fn.tabpagebuflist(arg) end
 --- @return integer
 function vim.fn.tabpagenr(arg) end
 
---- Like |winnr()| but for tab page {tabarg}.
---- {tabarg} specifies the number of tab page to be used.
+--- Like |winnr()| but for tabpage {tabarg}.
+--- {tabarg} specifies the |tabpage-number| to be used.
 --- {arg} is used like with |winnr()|:
 --- - When omitted the current window number is returned.  This is
----   the window which will be used when going to this tab page.
+---   the window which will be used when going to this tabpage.
 --- - When "$" the number of windows is returned.
 --- - When "#" the previous window nr is returned.
 --- Useful examples: >vim
----     tabpagewinnr(1)      " current window of tab page 1
----     tabpagewinnr(4, '$')    " number of windows in tab page 4
+---     tabpagewinnr(1)      " current window of tabpage 1
+---     tabpagewinnr(4, '$')    " number of windows in tabpage 4
 --- <When {tabarg} is invalid zero is returned.
 ---
 --- @param tabarg integer
@@ -10798,8 +10794,8 @@ function vim.fn.virtcol(expr, list, winid) end
 --- For a multi-byte character, the column number of the first
 --- byte in the character is returned.
 ---
---- The {winid} argument can be the window number or the
---- |window-ID|.  If this is zero, then the current window is used.
+--- {winid} is a |window-number| or |window-ID|.  If zero, the
+--- current window is used.
 ---
 --- Returns -1 if the window {winid} doesn't exist or the buffer
 --- line {lnum} or virtual column {col} is invalid.
@@ -10918,10 +10914,9 @@ function vim.fn.win_findbuf(bufnr) end
 
 --- Get the |window-ID| for the specified window.
 --- When {win} is missing use the current window.
---- With {win} this is the window number.  The top window has
---- number 1.
---- Without {tab} use the current tab, otherwise the tab with
---- number {tab}.  The first tab has number one.
+--- With {win} this is the |window-number|.
+--- Without {tab} use the current tab, otherwise the
+--- |tabpage-number| given by {tab}.
 --- Return zero if the window cannot be found.
 ---
 --- @param win? integer
@@ -10941,8 +10936,8 @@ function vim.fn.win_getid(win, tab) end
 ---   "unknown"  window {nr} not found
 ---
 --- When {nr} is omitted return the type of the current window.
---- When {nr} is given return the type of this window by number or
---- |window-ID|.
+--- When {nr} is given (|window-number| or |window-ID|) return the
+--- type of that window.
 ---
 --- Also see the 'buftype' option.
 ---
@@ -10950,8 +10945,7 @@ function vim.fn.win_getid(win, tab) end
 --- @return 'autocmd'|'command'|''|'loclist'|'popup'|'preview'|'quickfix'|'unknown'
 function vim.fn.win_gettype(nr) end
 
---- Go to window with ID {expr}.  This may also change the current
---- tabpage.
+--- Go to |window-ID| {expr}.  May change the current tabpage.
 --- Return TRUE if successful, FALSE if the window cannot be
 --- found.
 ---
@@ -10959,15 +10953,15 @@ function vim.fn.win_gettype(nr) end
 --- @return 0|1
 function vim.fn.win_gotoid(expr) end
 
---- Return a list with the tab number and window number of window
---- with ID {expr}: [tabnr, winnr].
+--- Return [tabnr, winnr] for window with |window-ID| {expr}, where
+--- tabnr is the |tabpage-number| and winnr is the |window-number|.
 --- Return [0, 0] if the window cannot be found.
 ---
 --- @param expr integer
 --- @return any
 function vim.fn.win_id2tabwin(expr) end
 
---- Return the window number of window with ID {expr}.
+--- Return the |window-number| of for the given |window-ID| {expr}.
 --- Return 0 if the window cannot be found in the current tabpage.
 ---
 --- @param expr integer
@@ -10976,7 +10970,7 @@ function vim.fn.win_id2win(expr) end
 
 --- Move window {nr}'s vertical separator (i.e., the right border)
 --- by {offset} columns, as if being dragged by the mouse.  {nr}
---- can be a window number or |window-ID|.  A positive {offset}
+--- is a |window-number| or |window-ID|.  A positive {offset}
 --- moves right and a negative {offset} moves left.  Moving a
 --- window's vertical separator will change the width of the
 --- window and the width of other windows adjacent to the vertical
@@ -10986,7 +10980,7 @@ function vim.fn.win_id2win(expr) end
 --- FALSE otherwise.
 --- This will fail for the rightmost window and a full-width
 --- window, since it has no separator on the right.
---- Only works for the current tab page. *E1308*
+--- Only works for the current tabpage. *E1308*
 ---
 --- @param nr integer
 --- @param offset integer
@@ -10994,15 +10988,15 @@ function vim.fn.win_id2win(expr) end
 function vim.fn.win_move_separator(nr, offset) end
 
 --- Move window {nr}'s status line (i.e., the bottom border) by
---- {offset} rows, as if being dragged by the mouse.  {nr} can be
---- a window number or |window-ID|.  A positive {offset} moves
+--- {offset} rows, as if being dragged by the mouse.  {nr} is a
+--- |window-number| or |window-ID|.  A positive {offset} moves
 --- down and a negative {offset} moves up.  Moving a window's
 --- status line will change the height of the window and the
 --- height of other windows adjacent to the status line. The
 --- magnitude of movement may be smaller than specified (e.g., as
 --- a consequence of maintaining 'winminheight'). Returns TRUE if
 --- the window can be found and FALSE otherwise.
---- Only works for the current tab page.
+--- Only works for the current tabpage.
 ---
 --- @param nr integer
 --- @param offset integer
@@ -11012,8 +11006,8 @@ function vim.fn.win_move_statusline(nr, offset) end
 --- Return the screen position of window {nr} as a list with two
 --- numbers: [row, col].  The first window always has position
 --- [1, 1], unless there is a tabline, then it is [2, 1].
---- {nr} can be the window number or the |window-ID|.  Use zero
---- for the current window.
+--- {nr} is a |window-number| or |window-ID|.  Use zero for the
+--- current window.
 --- Returns [0, 0] if the window cannot be found.
 ---
 --- @param nr integer
@@ -11025,8 +11019,8 @@ function vim.fn.win_screenpos(nr) end
 --- Unlike commands such as |:split|, no new windows are created
 --- (the |window-ID| of window {nr} is unchanged after the move).
 ---
---- Both {nr} and {target} can be window numbers or |window-ID|s.
---- Both must be in the current tab page.
+--- Both {nr} and {target} are a |window-number| or |window-ID|.
+--- Both must be in the current tabpage.
 ---
 --- Returns zero for success, non-zero for failure.
 ---
@@ -11045,8 +11039,8 @@ function vim.fn.win_screenpos(nr) end
 --- @return any
 function vim.fn.win_splitmove(nr, target, options) end
 
---- Returns the buffer number associated with window {nr}.
---- {nr} can be the window number or the |window-ID|.
+--- Returns the buffer number associated with window {nr}
+--- (|window-number| or |window-ID|).
 --- When {nr} is zero, the number of the buffer in the current
 --- window is returned.
 --- When window {nr} doesn't exist, -1 is returned.
@@ -11103,7 +11097,7 @@ function vim.fn.winheight(nr) end
 ---   ["row", [{nested list of windows}]]
 --- <
 --- Example: >vim
----   " Only one window in the tab page
+---   " Only one window in the tabpage
 ---   echo winlayout()
 --- < >
 ---   ['leaf', 1000]
@@ -11113,7 +11107,7 @@ function vim.fn.winheight(nr) end
 --- < >
 ---   ['col', [['leaf', 1000], ['leaf', 1001]]]
 --- < >vim
----   " The second tab page, with three horizontally split
+---   " The second tabpage, with three horizontally split
 ---   " windows, with two vertically split windows in the
 ---   " middle window
 ---   echo winlayout(2)
@@ -11144,7 +11138,7 @@ function vim.fn.winline() end
 ---     count).
 ---   #  the number of the last accessed window (where
 ---     |CTRL-W_p| goes to).  If there is no previous
----     window or it is in another tab page 0 is
+---     window or it is in another tabpage, 0 is
 ---     returned.  May refer to the current window in
 ---     some cases (e.g. when evaluating 'statusline'
 ---     expressions).
@@ -11172,7 +11166,7 @@ function vim.fn.winnr(arg) end
 
 --- Returns a sequence of |:resize| commands that should restore
 --- the current window sizes.  Only works properly when no windows
---- are opened or closed and the current window and tab page is
+--- are opened or closed and the current window and tabpage is
 --- unchanged.
 --- Example: >vim
 ---   let cmd = winrestcmd()
@@ -11274,15 +11268,18 @@ function vim.fn.winwidth(nr) end
 --- @return any
 function vim.fn.wordcount() end
 
---- When {object} is a |List| write it to file {fname}.  Each list
---- item is separated with a NL.  Each list item must be a String
---- or Number.
---- All NL characters are replaced with a NUL character.
---- Inserting CR characters needs to be done before passing {list}
---- to writefile().
+--- Writes {data} to file {fname}.
 ---
---- When {object} is a |Blob| write the bytes to file {fname}
---- unmodified, also when binary mode is not specified.
+--- - When {data} is a |Blob| its bytes are written unmodified
+---   (even if binary mode "b" is not specified).
+--- - When {data} is a Lua string, it is treated as a blob.
+--- - When {data} is a |List|, each list item is treated as a text
+---   line (terminated with a newline). Each list item must be
+---   a String or Number.
+---   - Any NL (newline) chars in the line are treated as a NUL
+---     character. (This is a workaround to allow Vimscript to
+---     write binary data, and is irrelevant for Lua, which should
+---     just pass a string instead.)
 ---
 --- {flags} must be a String.  These characters are recognized:
 ---
@@ -11320,11 +11317,11 @@ function vim.fn.wordcount() end
 ---   call writefile(fl, "foocopy", "b")
 --- <
 ---
---- @param object any
+--- @param data any
 --- @param fname string
 --- @param flags? string
 --- @return any
-function vim.fn.writefile(object, fname, flags) end
+function vim.fn.writefile(data, fname, flags) end
 
 --- Bitwise XOR on the two arguments.  The arguments are converted
 --- to a number.  A List, Dict or Float argument causes an error.

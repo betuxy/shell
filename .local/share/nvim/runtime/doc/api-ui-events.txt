@@ -846,7 +846,6 @@ must handle.
 		"empty"		Empty message (`:echo ""`), with empty `content`.
 				Should clear messages sharing the 'cmdheight'
 				area if it is the only message in a batch.
-		"bufwrite"	|:write| message
 		"confirm"	Message preceding a prompt (|:confirm|,
 				|confirm()|, |inputlist()|, |z=|, …)
 		"emsg"		Error (|errors|, internal error, |:throw|, …)
@@ -858,8 +857,8 @@ must handle.
 		"lua_error"	Error in |:lua| code
 		"lua_print"	|print()| from |:lua| code
 		"progress"	Progress message emitted by |nvim_echo()|
-		"rpc_error"	Error response from |rpcrequest()|
 		"quickfix"	Quickfix navigation message
+		"rpc_error"	Error response from |rpcrequest()|
 		"search_cmd"	Entered search command
 		"search_count"	Search count message ("S" flag of 'shortmess')
 		"shell_cmd"	|:!cmd| executed command

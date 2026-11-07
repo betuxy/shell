@@ -11,6 +11,7 @@ $NVIM	vvars.txt	/*$NVIM*
 $NVIM_APPNAME	starting.txt	/*$NVIM_APPNAME*
 $NVIM_LISTEN_ADDRESS	deprecated.txt	/*$NVIM_LISTEN_ADDRESS*
 $NVIM_LOG_FILE	starting.txt	/*$NVIM_LOG_FILE*
+$NVIM_NOTTYFAST	options.txt	/*$NVIM_NOTTYFAST*
 $NVIM_RPLUGIN_MANIFEST	remote_plugin.txt	/*$NVIM_RPLUGIN_MANIFEST*
 $NoDefaultCurrentDirectoryInExePath	vimfn.txt	/*$NoDefaultCurrentDirectoryInExePath*
 $TERM	tui.txt	/*$TERM*
@@ -655,7 +656,7 @@ $quote	vimeval.txt	/*$quote*
 'notermguicolors'	options.txt	/*'notermguicolors'*
 'notermsync'	options.txt	/*'notermsync'*
 'noterse'	vim_diff.txt	/*'noterse'*
-'notf'	vim_diff.txt	/*'notf'*
+'notf'	options.txt	/*'notf'*
 'notgc'	options.txt	/*'notgc'*
 'notgst'	options.txt	/*'notgst'*
 'notildeop'	options.txt	/*'notildeop'*
@@ -666,7 +667,7 @@ $quote	vimeval.txt	/*$quote*
 'notr'	options.txt	/*'notr'*
 'nottimeout'	options.txt	/*'nottimeout'*
 'nottybuiltin'	vim_diff.txt	/*'nottybuiltin'*
-'nottyfast'	vim_diff.txt	/*'nottyfast'*
+'nottyfast'	options.txt	/*'nottyfast'*
 'noudf'	options.txt	/*'noudf'*
 'noundofile'	options.txt	/*'noundofile'*
 'novb'	options.txt	/*'novb'*
@@ -919,7 +920,7 @@ $quote	vimeval.txt	/*$quote*
 'termsync'	options.txt	/*'termsync'*
 'terse'	vim_diff.txt	/*'terse'*
 'textwidth'	options.txt	/*'textwidth'*
-'tf'	vim_diff.txt	/*'tf'*
+'tf'	options.txt	/*'tf'*
 'tfu'	options.txt	/*'tfu'*
 'tgc'	options.txt	/*'tgc'*
 'tgst'	options.txt	/*'tgst'*
@@ -950,7 +951,7 @@ $quote	vimeval.txt	/*$quote*
 'ttm'	options.txt	/*'ttm'*
 'tty'	vim_diff.txt	/*'tty'*
 'ttybuiltin'	vim_diff.txt	/*'ttybuiltin'*
-'ttyfast'	vim_diff.txt	/*'ttyfast'*
+'ttyfast'	options.txt	/*'ttyfast'*
 'ttym'	vim_diff.txt	/*'ttym'*
 'ttymouse'	vim_diff.txt	/*'ttymouse'*
 'ttyscroll'	vim_diff.txt	/*'ttyscroll'*
@@ -2540,6 +2541,7 @@ $quote	vimeval.txt	/*$quote*
 :res	windows.txt	/*:res*
 :resize	windows.txt	/*:resize*
 :restart	gui.txt	/*:restart*
+:restart!	gui.txt	/*:restart!*
 :ret	change.txt	/*:ret*
 :retab	change.txt	/*:retab*
 :retab!	change.txt	/*:retab!*
@@ -3563,8 +3565,10 @@ E155	sign.txt	/*E155*
 E1550	options.txt	/*E1550*
 E156	sign.txt	/*E156*
 E1562	options.txt	/*E1562*
+E1568	options.txt	/*E1568*
 E157	sign.txt	/*E157*
 E1572	options.txt	/*E1572*
+E1577	options.txt	/*E1577*
 E158	sign.txt	/*E158*
 E159	sign.txt	/*E159*
 E16	cmdline.txt	/*E16*
@@ -3932,6 +3936,7 @@ E518	options.txt	/*E518*
 E519	options.txt	/*E519*
 E52	syntax.txt	/*E52*
 E520	options.txt	/*E520*
+E5201	gui.txt	/*E5201*
 E521	options.txt	/*E521*
 E5210	channel.txt	/*E5210*
 E523	vimeval.txt	/*E523*
@@ -4498,9 +4503,6 @@ PackChangedPre	pack.txt	/*PackChangedPre*
 Partial	vimeval.txt	/*Partial*
 Pattern	pattern.txt	/*Pattern*
 Pattern:match()	lua.txt	/*Pattern:match()*
-Pos:to_cursor()	lua.txt	/*Pos:to_cursor()*
-Pos:to_extmark()	lua.txt	/*Pos:to_extmark()*
-Pos:to_lsp()	lua.txt	/*Pos:to_lsp()*
 Progress	autocmd.txt	/*Progress*
 Python	if_pyth.txt	/*Python*
 Q	repeat.txt	/*Q*
@@ -4554,12 +4556,6 @@ Quickfix	quickfix.txt	/*Quickfix*
 QuitPre	autocmd.txt	/*QuitPre*
 R	change.txt	/*R*
 RPC	api.txt	/*RPC*
-Range:has()	lua.txt	/*Range:has()*
-Range:intersect()	lua.txt	/*Range:intersect()*
-Range:is_empty()	lua.txt	/*Range:is_empty()*
-Range:to_cursor()	lua.txt	/*Range:to_cursor()*
-Range:to_extmark()	lua.txt	/*Range:to_extmark()*
-Range:to_lsp()	lua.txt	/*Range:to_lsp()*
 RecordingEnter	autocmd.txt	/*RecordingEnter*
 RecordingLeave	autocmd.txt	/*RecordingLeave*
 RemoteReply	autocmd.txt	/*RemoteReply*
@@ -5602,6 +5598,7 @@ default-autocmds	vim_diff.txt	/*default-autocmds*
 default-mappings	vim_diff.txt	/*default-mappings*
 default-mouse	vim_diff.txt	/*default-mouse*
 defaults	vim_diff.txt	/*defaults*
+deferred	api.txt	/*deferred*
 define-function	userfunc.txt	/*define-function*
 definition-search	tagsrch.txt	/*definition-search*
 definitions	intro.txt	/*definitions*
@@ -5634,6 +5631,7 @@ dev-doc	dev.txt	/*dev-doc*
 dev-error-codes	dev.txt	/*dev-error-codes*
 dev-error-patterns	dev.txt	/*dev-error-patterns*
 dev-events	dev_arch.txt	/*dev-events*
+dev-filesystem	dev_arch.txt	/*dev-filesystem*
 dev-filter-test	dev_test.txt	/*dev-filter-test*
 dev-fix-test	dev_test.txt	/*dev-fix-test*
 dev-guidelines	dev.txt	/*dev-guidelines*
@@ -5869,6 +5867,7 @@ exepath()	vimfn.txt	/*exepath()*
 exists()	vimfn.txt	/*exists()*
 exiting	starting.txt	/*exiting*
 exiting-variable	vvars.txt	/*exiting-variable*
+exitreason-variable	vvars.txt	/*exitreason-variable*
 exp()	vimfn.txt	/*exp()*
 expand()	vimfn.txt	/*expand()*
 expand-env	options.txt	/*expand-env*
@@ -7374,6 +7373,7 @@ lsp-handler-resolution	lsp.txt	/*lsp-handler-resolution*
 lsp-highlight	lsp.txt	/*lsp-highlight*
 lsp-highlight-codelens	lsp.txt	/*lsp-highlight-codelens*
 lsp-highlight-signature	lsp.txt	/*lsp-highlight-signature*
+lsp-incremental-selection	lsp.txt	/*lsp-incremental-selection*
 lsp-inlay_hint	lsp.txt	/*lsp-inlay_hint*
 lsp-inline_completion	lsp.txt	/*lsp-inline_completion*
 lsp-linked_editing_range	lsp.txt	/*lsp-linked_editing_range*
@@ -9025,6 +9025,8 @@ start-of-file	pattern.txt	/*start-of-file*
 start-vimdiff	diff.txt	/*start-vimdiff*
 starting	starting.txt	/*starting*
 starting.txt	starting.txt	/*starting.txt*
+startreason-variable	vvars.txt	/*startreason-variable*
+starttime-variable	vvars.txt	/*starttime-variable*
 startup	starting.txt	/*startup*
 startup-options	starting.txt	/*startup-options*
 startup-terminal	tui.txt	/*startup-terminal*
@@ -9157,9 +9159,6 @@ t_xx	vim_diff.txt	/*t_xx*
 tab	intro.txt	/*tab*
 tab-ID	tabpage.txt	/*tab-ID*
 tab-page	tabpage.txt	/*tab-page*
-tab-page-commands	tabpage.txt	/*tab-page-commands*
-tab-page-intro	tabpage.txt	/*tab-page-intro*
-tab-page-other	tabpage.txt	/*tab-page-other*
 tabid	tabpage.txt	/*tabid*
 table.concat()	luaref.txt	/*table.concat()*
 table.foreach()	luaref.txt	/*table.foreach()*
@@ -9171,6 +9170,10 @@ table.sort()	luaref.txt	/*table.sort()*
 tabline-menu	tabpage.txt	/*tabline-menu*
 tabnew-autocmd	tabpage.txt	/*tabnew-autocmd*
 tabpage	tabpage.txt	/*tabpage*
+tabpage-commands	tabpage.txt	/*tabpage-commands*
+tabpage-intro	tabpage.txt	/*tabpage-intro*
+tabpage-number	tabpage.txt	/*tabpage-number*
+tabpage-other	tabpage.txt	/*tabpage-other*
 tabpage-variable	vimeval.txt	/*tabpage-variable*
 tabpage.txt	tabpage.txt	/*tabpage.txt*
 tabpagebuflist()	vimfn.txt	/*tabpagebuflist()*
@@ -9404,6 +9407,7 @@ ui-ext-options	api-ui-events.txt	/*ui-ext-options*
 ui-global	api-ui-events.txt	/*ui-global*
 ui-grid-old	api-ui-events.txt	/*ui-grid-old*
 ui-hlstate	api-ui-events.txt	/*ui-hlstate*
+ui-lifecycle	gui.txt	/*ui-lifecycle*
 ui-linegrid	api-ui-events.txt	/*ui-linegrid*
 ui-messages	api-ui-events.txt	/*ui-messages*
 ui-multigrid	api-ui-events.txt	/*ui-multigrid*
@@ -9782,6 +9786,7 @@ v:errors	vvars.txt	/*v:errors*
 v:event	vvars.txt	/*v:event*
 v:exception	vvars.txt	/*v:exception*
 v:exiting	vvars.txt	/*v:exiting*
+v:exitreason	vvars.txt	/*v:exitreason*
 v:false	vvars.txt	/*v:false*
 v:fcs_choice	vvars.txt	/*v:fcs_choice*
 v:fcs_reason	vvars.txt	/*v:fcs_reason*
@@ -9835,6 +9840,8 @@ v:sizeofint	vim_diff.txt	/*v:sizeofint*
 v:sizeoflong	vim_diff.txt	/*v:sizeoflong*
 v:sizeofpointer	vim_diff.txt	/*v:sizeofpointer*
 v:stacktrace	vvars.txt	/*v:stacktrace*
+v:startreason	vvars.txt	/*v:startreason*
+v:starttime	vvars.txt	/*v:starttime*
 v:statusmsg	vvars.txt	/*v:statusmsg*
 v:stderr	vvars.txt	/*v:stderr*
 v:swapchoice	vvars.txt	/*v:swapchoice*
@@ -9902,7 +9909,9 @@ v_U	change.txt	/*v_U*
 v_V	visual.txt	/*v_V*
 v_X	change.txt	/*v_X*
 v_Y	change.txt	/*v_Y*
+v_[N	treesitter.txt	/*v_[N*
 v_[n	treesitter.txt	/*v_[n*
+v_]N	treesitter.txt	/*v_]N*
 v_]n	treesitter.txt	/*v_]n*
 v_a	motion.txt	/*v_a*
 v_a'	motion.txt	/*v_a'*
@@ -10119,6 +10128,7 @@ vim.fs.read()	lua.txt	/*vim.fs.read()*
 vim.fs.relpath()	lua.txt	/*vim.fs.relpath()*
 vim.fs.rm()	lua.txt	/*vim.fs.rm()*
 vim.fs.root()	lua.txt	/*vim.fs.root()*
+vim.fs.write()	lua.txt	/*vim.fs.write()*
 vim.g	lua.txt	/*vim.g*
 vim.glob	lua.txt	/*vim.glob*
 vim.glob.to_lpeg()	lua.txt	/*vim.glob.to_lpeg()*
@@ -10190,6 +10200,7 @@ vim.lpeg.match()	lua.txt	/*vim.lpeg.match()*
 vim.lpeg.setmaxstack()	lua.txt	/*vim.lpeg.setmaxstack()*
 vim.lpeg.type()	lua.txt	/*vim.lpeg.type()*
 vim.lpeg.version()	lua.txt	/*vim.lpeg.version()*
+vim.lsp	lsp.txt	/*vim.lsp*
 vim.lsp.Client	lsp.txt	/*vim.lsp.Client*
 vim.lsp.Client.Progress	lsp.txt	/*vim.lsp.Client.Progress*
 vim.lsp.ClientConfig	lsp.txt	/*vim.lsp.ClientConfig*
@@ -10405,12 +10416,23 @@ vim.pos	lua.txt	/*vim.pos*
 vim.pos.cursor()	lua.txt	/*vim.pos.cursor()*
 vim.pos.extmark()	lua.txt	/*vim.pos.extmark()*
 vim.pos.lsp()	lua.txt	/*vim.pos.lsp()*
+vim.pos.offset()	lua.txt	/*vim.pos.offset()*
+vim.pos.to_cursor()	lua.txt	/*vim.pos.to_cursor()*
+vim.pos.to_extmark()	lua.txt	/*vim.pos.to_extmark()*
+vim.pos.to_lsp()	lua.txt	/*vim.pos.to_lsp()*
+vim.pos.to_offset()	lua.txt	/*vim.pos.to_offset()*
 vim.pretty_print()	deprecated.txt	/*vim.pretty_print()*
 vim.print()	lua.txt	/*vim.print()*
 vim.range	lua.txt	/*vim.range*
 vim.range.cursor()	lua.txt	/*vim.range.cursor()*
 vim.range.extmark()	lua.txt	/*vim.range.extmark()*
+vim.range.has()	lua.txt	/*vim.range.has()*
+vim.range.intersect()	lua.txt	/*vim.range.intersect()*
+vim.range.is_empty()	lua.txt	/*vim.range.is_empty()*
 vim.range.lsp()	lua.txt	/*vim.range.lsp()*
+vim.range.to_cursor()	lua.txt	/*vim.range.to_cursor()*
+vim.range.to_extmark()	lua.txt	/*vim.range.to_extmark()*
+vim.range.to_lsp()	lua.txt	/*vim.range.to_lsp()*
 vim.re	lua.txt	/*vim.re*
 vim.re.compile()	lua.txt	/*vim.re.compile()*
 vim.re.find()	lua.txt	/*vim.re.find()*
@@ -10513,6 +10535,7 @@ vim.treesitter.query.parse()	treesitter.txt	/*vim.treesitter.query.parse()*
 vim.treesitter.query.parse_query()	deprecated.txt	/*vim.treesitter.query.parse_query()*
 vim.treesitter.query.set()	treesitter.txt	/*vim.treesitter.query.set()*
 vim.treesitter.query.set_query()	deprecated.txt	/*vim.treesitter.query.set_query()*
+vim.treesitter.select()	treesitter.txt	/*vim.treesitter.select()*
 vim.treesitter.set_query()	deprecated.txt	/*vim.treesitter.set_query()*
 vim.treesitter.start()	treesitter.txt	/*vim.treesitter.start()*
 vim.treesitter.stop()	treesitter.txt	/*vim.treesitter.stop()*
@@ -10630,6 +10653,7 @@ window-exit	editing.txt	/*window-exit*
 window-functions	usr_41.txt	/*window-functions*
 window-move-cursor	windows.txt	/*window-move-cursor*
 window-moving	windows.txt	/*window-moving*
+window-number	windows.txt	/*window-number*
 window-resize	windows.txt	/*window-resize*
 window-size	tui.txt	/*window-size*
 window-size-functions	usr_41.txt	/*window-size-functions*

@@ -643,8 +643,8 @@ end
 ---
 ---@param behavior 'error'|'keep'|'force'|fun(key:any, prev_value:any?, value:any): any Decides what to do if a key is found in more than one map:
 ---      - "error": raise an error
----      - "keep":  use value from the leftmost map
 ---      - "force": use value from the rightmost map
+---      - "keep":  use value from the leftmost map
 ---      - If a function, it receives the current key, the previous value in the currently merged table (if present), the current value and should
 ---        return the value for the given key in the merged table.
 ---@param ... table Two or more tables
@@ -676,8 +676,8 @@ end
 ---@generic T2: table
 ---@param behavior 'error'|'keep'|'force'|fun(key:any, prev_value:any?, value:any): any Decides what to do if a key is found in more than one map:
 ---      - "error": raise an error
----      - "keep":  use value from the leftmost map
 ---      - "force": use value from the rightmost map
+---      - "keep":  use value from the leftmost map
 ---      - If a function, it receives the current key, the previous value in the currently merged table (if present), the current value and should
 ---        return the value for the given key in the merged table.
 ---@param ... T2 Two or more tables
@@ -960,7 +960,7 @@ function vim.islist(t)
   for _ in
     pairs(t--[[@as table<any,any>]])
   do
-    if t[j] == nil then
+    if rawget(t, j) == nil then
       return false
     end
     j = j + 1
@@ -1669,14 +1669,14 @@ function vim._with(context, f)
   return vim._with_c(context, callback)
 end
 
---- @param bufnr? integer
+--- @param buf? integer
 --- @return integer
-function vim._resolve_bufnr(bufnr)
-  if bufnr == nil or bufnr == 0 then
+function vim._resolve_bufnr(buf)
+  if buf == nil or buf == 0 then
     return vim.api.nvim_get_current_buf()
   end
-  vim.validate('bufnr', bufnr, 'number')
-  return bufnr
+  vim.validate('buf', buf, 'number')
+  return buf
 end
 
 --- @generic T
